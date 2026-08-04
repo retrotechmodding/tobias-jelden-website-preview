@@ -1,0 +1,10 @@
+# Local review artifacts
+screenshots/
+scripts/
+
+# Unoptimized source media
+assets/video/source/
+assets/power-plant-gemini.png
+
+# macOS
+.DS_Store
