@@ -1,5 +1,23 @@
 const menuButton = document.querySelector('[data-menu-toggle]');
 const nav = document.querySelector('[data-nav]');
+const heroVideos = [...document.querySelectorAll('[data-hero-video]')];
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+const syncHeroMotion = () => {
+  heroVideos.forEach((video) => {
+    video.muted = true;
+    if (reducedMotion.matches) {
+      video.pause();
+      return;
+    }
+    video.play().catch(() => {
+      // Das Poster bleibt als robuste Fallback-Ebene sichtbar.
+    });
+  });
+};
+
+syncHeroMotion();
+reducedMotion.addEventListener?.('change', syncHeroMotion);
 
 menuButton?.addEventListener('click', () => {
   const open = menuButton.getAttribute('aria-expanded') !== 'true';
