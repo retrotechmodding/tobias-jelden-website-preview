@@ -3,213 +3,192 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Tobias Jelden – Sachverständiger für Elektrotechnik. Unabhängige technische Bewertungen, Gutachten und Schadenanalysen.">
-  <meta name="theme-color" content="#0b0d0c">
-  <title>Tobias Jelden — Sachverständiger Elektrotechnik</title>
-  <link rel="icon" href="assets/favicon.svg?v=3" type="image/svg+xml">
-  <link rel="icon" href="assets/favicon-32.png?v=3" type="image/png" sizes="32x32">
-  <link rel="shortcut icon" href="assets/favicon.ico?v=3">
-  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=3">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <script src="script.js" defer></script>
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="description" content="Jelden Sachverständigenbüro: Prüfungen elektrotechnischer Anlagen nach PrüfVO und VdS, Erst- und wiederkehrende Prüfungen sowie fachliche Unterstützung während der Bauphase.">
+  <meta name="theme-color" content="#0A526B">
+  <meta property="og:title" content="Jelden Sachverständigenbüro">
+  <meta property="og:description" content="Prüfungen elektrotechnischer Anlagen und fachliche Unterstützung während der Bauphase.">
+  <meta property="og:image" content="assets/brand/brand-banner.jpg">
+  <title>Jelden Sachverständigenbüro | Prüfsachverständiger Elektrotechnik</title>
+  <link rel="icon" href="assets/favicon-32.png?v=4" type="image/png" sizes="32x32">
+  <link rel="shortcut icon" href="assets/favicon.ico?v=4">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=4">
+  <link rel="stylesheet" href="styles.css?v=4">
+  <script src="script.js?v=4" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Zum Inhalt springen</a>
 
+  <header class="site-header" data-header>
+    <a class="brand" href="#top" aria-label="Jelden Sachverständigenbüro Startseite">
+      <img src="assets/brand/logo-horizontal.jpg" alt="Jelden Sachverständigenbüro">
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" data-menu-toggle>
+      <span></span><span></span><span class="sr-only">Menü öffnen</span>
+    </button>
+    <nav class="main-nav" id="main-nav" aria-label="Hauptnavigation" data-nav>
+      <a href="#leistungen">Leistungen</a>
+      <a href="#pruefarten">Prüfarten</a>
+      <a href="#einsatzgebiet">Einsatzgebiet</a>
+      <a href="#zusammenarbeit">Zusammenarbeit</a>
+    </nav>
+    <a class="header-cta" href="#kontakt">Prüfung anfragen</a>
+  </header>
+
   <main id="main">
     <section class="hero" id="top" aria-labelledby="hero-title">
-      <div class="hero-rail" aria-hidden="true">
-        <span>TJ / 01</span>
-        <span class="rail-line"></span>
-        <span>ELEKTROTECHNIK</span>
-      </div>
-      <img class="hero-image" src="assets/power-plant-gemini.webp" alt="Modernes Kraftwerk mit elektrischer Schaltanlage in einer nebligen Industrielandschaft">
-      <video class="hero-video" data-hero-video autoplay muted loop playsinline preload="auto" poster="assets/power-plant-gemini.webp" aria-hidden="true">
-        <source src="assets/video/power-plant-lightning.webm" type="video/webm">
-        <source src="assets/video/power-plant-lightning.mp4" type="video/mp4">
-      </video>
-      <div class="hero-shade" aria-hidden="true"></div>
-
-      <header class="site-header" data-header>
-        <a class="brand" href="#top" aria-label="Startseite Tobias Jelden">
-          <span class="brand-mark">TJ</span>
-          <span class="brand-name">Tobias Jelden</span>
-        </a>
-        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" data-menu-toggle>
-          <span></span><span></span><span class="sr-only">Menü öffnen</span>
-        </button>
-        <nav class="main-nav" id="main-nav" aria-label="Hauptnavigation" data-nav>
-          <a href="#expertise">Expertise</a>
-          <a href="#leistungen">Leistungen</a>
-          <a href="#vorgehen">Vorgehen</a>
-          <a href="#kontakt">Kontakt</a>
-        </nav>
-        <a class="nav-cta" href="#kontakt">Anfrage starten</a>
-      </header>
-
-      <div class="hero-content">
-        <div class="hero-left">
-          <span class="overline">Unabhängig · Präzise · Verständlich</span>
-          <h1 id="hero-title">Klarheit für<br>komplexe<br>Elektrotechnik.</h1>
-        </div>
-        <div class="hero-right">
-          <span class="micro-title">Sachverständiger Elektrotechnik</span>
-          <p>Technische Sachverhalte sicher einordnen – mit unabhängiger Analyse, nachvollziehbarer Bewertung und klarer Dokumentation.</p>
-          <button class="consult-button" type="button" data-contact-open>
-            <span class="consult-icon">TJ</span>
-            <span>Erstgespräch anfragen</span>
-          </button>
+      <div class="hero-copy">
+        <span class="eyebrow">Prüfsachverständiger · Fachrichtung Elektrotechnik (NRW)</span>
+        <h1 id="hero-title">Sicherheit prüfen.<br><em>Projekte verlässlich begleiten.</em></h1>
+        <p class="hero-lead">Prüfungen elektrotechnischer Anlagen nach PrüfVO und VdS. Für Erstprüfungen, wiederkehrende Prüfungen und fachliche Unterstützung während der Bauphase.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="mailto:info@sv-jelden.de?subject=Anfrage%20Prüfung%20elektrotechnischer%20Anlagen">Prüfung anfragen</a>
+          <a class="button button-secondary" href="tel:+491607940038">+49 160 794 00 38</a>
         </div>
       </div>
+      <div class="hero-visual" aria-hidden="true">
+        <img src="assets/brand/brand-square.jpg" alt="">
+        <div class="hero-orbit"></div>
+        <span class="visual-note">JELDEN<br>SACHVERSTÄNDIGENBÜRO</span>
+      </div>
+      <div class="hero-facts" aria-label="Leistungsübersicht">
+        <div><strong>PrüfVO</strong><span>NRW · Hamburg · Rheinland-Pfalz</span></div>
+        <div><strong>VdS</strong><span>Prüfung elektrischer Anlagen</span></div>
+        <div><strong>Deutschlandweit</strong><span>Schwerpunkt nördliches NRW & Niedersachsen</span></div>
+        <div><strong>Projektphasen</strong><span>Erstprüfung · Wiederkehrend · Baubegleitend</span></div>
+      </div>
+    </section>
 
-      <div class="hero-bottom">
-        <a class="ghost-pill" href="#expertise">Warum Sachverstand</a>
-        <div class="hero-bottom-title">Technik.<br>Klar bewertet.</div>
-        <div class="hero-bottom-copy">
-          <p>Von der ersten Fragestellung bis zum belastbaren Ergebnis: systematisch, transparent und auf das Wesentliche konzentriert.</p>
-          <a href="#leistungen">Leistungen ansehen</a>
+    <section class="intro section" aria-labelledby="intro-title">
+      <span class="section-index">01 / Profil</span>
+      <div class="intro-content">
+        <p class="statement" id="intro-title">Prüfsicherheit beginnt nicht erst bei der Abnahme. Sie entsteht, wenn Anlagen, Unterlagen und Ausführung frühzeitig zusammen betrachtet werden.</p>
+        <div class="intro-aside">
+          <img src="assets/brand/brand-mark.png" alt="Bildmarke Jelden Sachverständigenbüro">
+          <p><strong>Tobias Jelden</strong><br>Prüfsachverständiger<br>Fachrichtung Elektrotechnik (NRW)</p>
         </div>
       </div>
     </section>
 
-    <section class="intro section-light" id="expertise">
-      <div class="intro-top">
-        <span class="section-label">01 / Expertise</span>
-        <p class="intro-lead">Wenn Technik zur Streitfrage wird, braucht es keine Vermutungen. Sondern einen unabhängigen Blick auf Fakten, Zusammenhänge und Ursachen.</p>
+    <section class="services section" id="leistungen" aria-labelledby="services-title">
+      <div class="section-heading">
+        <span class="section-index">02 / Leistungen</span>
+        <h2 id="services-title">Klar abgegrenzte<br><em>Prüfleistungen.</em></h2>
+        <p>Der bestätigte Leistungsumfang konzentriert sich auf elektrotechnische Anlagen, Prüfungen nach PrüfVO und VdS sowie die fachliche Begleitung in Bauphasen.</p>
       </div>
-      <div class="intro-grid">
-        <div class="intro-statement">
-          <h2>Nachvollziehbare<br>Antworten für<br><em>sichere Entscheidungen.</em></h2>
-        </div>
-        <div class="intro-copy">
-          <p>Als Sachverständiger für Elektrotechnik untersucht Tobias Jelden elektrische Anlagen, technische Auffälligkeiten und Schadenbilder mit systematischem Blick.</p>
-          <p>Das Ergebnis ist eine klare, verständliche Bewertung als belastbare Grundlage für private, gewerbliche oder rechtliche Entscheidungen.</p>
-          <a class="line-link" href="#vorgehen">So entsteht eine Bewertung</a>
-        </div>
-      </div>
-      <div class="trust-strip">
-        <span>Unabhängig</span><i></i><span>Technisch präzise</span><i></i><span>Verständlich dokumentiert</span>
-      </div>
-    </section>
 
-    <section class="services section-light" id="leistungen">
-      <div class="section-head">
-        <span class="section-label">02 / Leistungen</span>
-        <h2>Technische Expertise,<br>passend zur Fragestellung.</h2>
-        <p>Der Leistungsumfang richtet sich nicht nach einer Schablone, sondern nach dem konkreten Sachverhalt und der benötigten Entscheidungssicherheit.</p>
-      </div>
-      <div class="service-list">
-        <article class="service-item">
-          <span class="service-no">01</span>
-          <div><h3>Gutachten &<br>Stellungnahmen</h3><p>Strukturierte technische Bewertungen für klar definierte Fragestellungen.</p></div>
+      <div class="service-grid">
+        <article class="service-card service-card-featured">
+          <span class="card-no">01</span>
+          <span class="card-tag">PrüfVO</span>
+          <h3>Elektrische Anlagen</h3>
+          <p>Prüfungen elektrischer Anlagen im Geltungsbereich der PrüfVO in NRW, Hamburg und Rheinland-Pfalz.</p>
         </article>
-        <article class="service-item">
-          <span class="service-no">02</span>
-          <div><h3>Prüfung elektrischer<br>Anlagen</h3><p>Zustand, Ausführung und Auffälligkeiten erfassen und fachlich einordnen.</p></div>
+        <article class="service-card">
+          <span class="card-no">02</span>
+          <span class="card-tag">PrüfVO</span>
+          <h3>Sicherheitsstromversorgung & Sicherheitsbeleuchtung</h3>
+          <p>Prüfung der Anlagen innerhalb des bestätigten PrüfVO-Leistungsumfangs.</p>
         </article>
-        <article class="service-item">
-          <span class="service-no">03</span>
-          <div><h3>Schaden- &<br>Ursachenanalyse</h3><p>Fehlerbilder systematisch untersuchen und mögliche Ursachen nachvollziehbar bewerten.</p></div>
+        <article class="service-card">
+          <span class="card-no">03</span>
+          <span class="card-tag">PrüfVO</span>
+          <h3>Brandmelde- & Alarmierungsanlagen</h3>
+          <p>Prüfung von Brandmelde- und Alarmierungsanlagen innerhalb des bestätigten Leistungsumfangs.</p>
         </article>
-        <article class="service-item">
-          <span class="service-no">04</span>
-          <div><h3>Technische<br>Beratung</h3><p>Fachliche Einordnung vor Kauf, Sanierung, Abnahme oder bei strittigen Fragen.</p></div>
+        <article class="service-card service-card-dark">
+          <span class="card-no">04</span>
+          <span class="card-tag">VdS</span>
+          <h3>Elektrische Anlagen nach VdS</h3>
+          <p>Prüfungen elektrischer Anlagen nach VdS als eigenständiger Leistungsbereich.</p>
         </article>
       </div>
     </section>
 
-    <section class="feature">
-      <div class="feature-media">
-        <img src="assets/power-plant-gemini.webp" alt="Detailansicht eines Kraftwerks mit Schaltanlage">
-        <span class="image-caption">KI-Bild · erstellt mit Google Gemini</span>
-      </div>
-      <div class="feature-copy">
-        <span class="section-label section-label--dark">03 / Technischer Blick</span>
-        <h2>Was sichtbar ist,<br>ist selten die<br>ganze Ursache.</h2>
-        <p>Anlage, Umfeld, Messwerte, Dokumentation und Fehlerbild ergeben erst gemeinsam ein belastbares technisches Gesamtbild.</p>
-        <div class="feature-facts">
-          <div><strong>01</strong><span>Sachverhalt erfassen</span></div>
-          <div><strong>02</strong><span>Zusammenhänge prüfen</span></div>
-          <div><strong>03</strong><span>Ergebnis einordnen</span></div>
+    <section class="modes" id="pruefarten" aria-labelledby="modes-title">
+      <div class="modes-brand" aria-hidden="true"><img src="assets/brand/brand-banner.jpg" alt=""></div>
+      <div class="modes-copy">
+        <span class="section-index section-index-light">03 / Prüfarten</span>
+        <h2 id="modes-title">Vom ersten Prüftermin bis zur wiederkehrenden Prüfung.</h2>
+        <div class="mode-list">
+          <article><span>01</span><div><h3>Erstprüfungen</h3><p>Prüfung vor dem vorgesehenen Betrieb im jeweils vereinbarten Leistungsumfang.</p></div></article>
+          <article><span>02</span><div><h3>Wiederkehrende Prüfungen</h3><p>Erneute Prüfung der betreffenden Anlagen im wiederkehrenden Prüfzyklus.</p></div></article>
+          <article><span>03</span><div><h3>Unterstützung während der Bauphase</h3><p>Fachliche Begleitung bereits während der Planung und Ausführung, bevor die abschließende Prüfung ansteht.</p></div></article>
         </div>
       </div>
     </section>
 
-    <section class="process section-light" id="vorgehen">
-      <div class="section-head process-head">
-        <span class="section-label">04 / Vorgehen</span>
-        <h2>Ein klarer Prozess.<br>Ein belastbares Ergebnis.</h2>
-      </div>
-      <div class="process-grid">
-        <article><span>01</span><h3>Fragestellung klären</h3><p>Auftrag, Ziel und vorhandene Unterlagen werden eingeordnet.</p></article>
-        <article><span>02</span><h3>Vor Ort untersuchen</h3><p>Anlage, Ausführung oder Schadenbild werden systematisch erfasst.</p></article>
-        <article><span>03</span><h3>Technisch bewerten</h3><p>Befunde, Messwerte und Dokumente werden fachlich zusammengeführt.</p></article>
-        <article><span>04</span><h3>Verständlich dokumentieren</h3><p>Das Ergebnis wird klar und entscheidungsorientiert dargestellt.</p></article>
+    <section class="region section" id="einsatzgebiet" aria-labelledby="region-title">
+      <span class="section-index">04 / Einsatzgebiet</span>
+      <div class="region-grid">
+        <div>
+          <h2 id="region-title">Deutschlandweit tätig.<br><em>Regional fokussiert.</em></h2>
+          <p>Tobias Jelden ist deutschlandweit im Einsatz. Für die künftige Ausrichtung liegt der Schwerpunkt im nördlichen Nordrhein-Westfalen und in Niedersachsen.</p>
+        </div>
+        <div class="region-map" aria-label="Regionale Einordnung">
+          <div class="region-ring region-ring-one"></div>
+          <div class="region-ring region-ring-two"></div>
+          <div class="region-point"><i></i><strong>Düsseldorf</strong><span>Geschäftssitz</span></div>
+          <div class="region-focus"><span>Schwerpunkt</span><strong>Nördliches NRW<br>& Niedersachsen</strong></div>
+          <div class="region-wide">Deutschlandweite Einsätze</div>
+        </div>
       </div>
     </section>
 
-    <section class="faq section-light">
-      <div class="faq-title">
-        <span class="section-label">05 / Fragen</span>
-        <h2>Vorab<br>geklärt.</h2>
+    <section class="partners section" id="zusammenarbeit" aria-labelledby="partners-title">
+      <div class="section-heading compact">
+        <span class="section-index">05 / Netzwerk</span>
+        <h2 id="partners-title">Zusammenarbeit,<br><em>klar benannt.</em></h2>
+        <p>Die folgenden Unternehmen und Personen wurden von Tobias Jelden als bestehende Zusammenarbeit benannt.</p>
       </div>
+      <div class="partner-list">
+        <div><span>01</span><strong>TAC</strong></div>
+        <div><span>02</span><strong>Günter Strathmann</strong></div>
+        <div><span>03</span><strong>IPO Ingenieur- und Prüforganisation GmbH</strong></div>
+      </div>
+    </section>
+
+    <section class="faq section" aria-labelledby="faq-title">
+      <div class="faq-head"><span class="section-index">06 / Fragen</span><h2 id="faq-title">Vorab<br><em>geklärt.</em></h2></div>
       <div class="accordion" data-accordion>
         <article class="accordion-item">
-          <button aria-expanded="false"><span>Wann ist ein Sachverständiger sinnvoll?</span><i>+</i></button>
-          <div class="accordion-panel"><p>Wenn ein technischer Zustand unabhängig bewertet, eine Ursache eingeordnet oder eine belastbare Entscheidungsgrundlage benötigt wird.</p></div>
+          <button aria-expanded="true"><span>Welche Leistungen werden angeboten?</span><i>×</i></button>
+          <div class="accordion-panel"><p>Prüfungen nach PrüfVO für elektrische Anlagen, Sicherheitsstromversorgung und Sicherheitsbeleuchtung sowie Brandmelde- und Alarmierungsanlagen. Hinzu kommen Prüfungen elektrischer Anlagen nach VdS.</p></div>
         </article>
         <article class="accordion-item">
-          <button aria-expanded="false"><span>Welche Unterlagen werden benötigt?</span><i>+</i></button>
-          <div class="accordion-panel"><p>Je nach Fall helfen Pläne, Prüfprotokolle, Fotos, Rechnungen und bisherige Korrespondenz. Was wirklich relevant ist, wird vorab geklärt.</p></div>
+          <button aria-expanded="false"><span>Werden Erst- und wiederkehrende Prüfungen übernommen?</span><i>+</i></button>
+          <div class="accordion-panel"><p>Ja. Beide Prüfarten gehören zum bestätigten Leistungsumfang.</p></div>
         </article>
         <article class="accordion-item">
-          <button aria-expanded="false"><span>Wie läuft die erste Anfrage ab?</span><i>+</i></button>
-          <div class="accordion-panel"><p>Sie schildern kurz die Fragestellung. Danach werden mögliche Schritte, benötigte Unterlagen und der zeitliche Rahmen abgestimmt.</p></div>
+          <button aria-expanded="false"><span>Ist eine Begleitung während der Bauphase möglich?</span><i>+</i></button>
+          <div class="accordion-panel"><p>Ja. Fachliche Unterstützung während der Bauphase wird neben den eigentlichen Prüfungen angeboten.</p></div>
         </article>
         <article class="accordion-item">
-          <button aria-expanded="false"><span>Ist eine Ersteinschätzung möglich?</span><i>+</i></button>
-          <div class="accordion-panel"><p>Je nach Fragestellung kann zunächst eingeordnet werden, ob und in welchem Umfang eine vertiefte Untersuchung sinnvoll ist.</p></div>
+          <button aria-expanded="false"><span>In welchen Regionen ist Jelden tätig?</span><i>+</i></button>
+          <div class="accordion-panel"><p>Die Tätigkeit ist deutschlandweit. Der künftige regionale Schwerpunkt liegt im nördlichen NRW und in Niedersachsen. PrüfVO-Leistungen werden für NRW, Hamburg und Rheinland-Pfalz ausgewiesen.</p></div>
         </article>
       </div>
     </section>
 
-    <section class="contact" id="kontakt">
-      <div class="contact-top">
-        <span class="section-label section-label--dark">06 / Kontakt</span>
-        <span>Projektanfragen & technische Fragestellungen</span>
+    <section class="contact" id="kontakt" aria-labelledby="contact-title">
+      <div class="contact-mark" aria-hidden="true"><img src="assets/brand/brand-mark.png" alt=""></div>
+      <span class="section-index section-index-light">07 / Kontakt</span>
+      <h2 id="contact-title">Welche Anlage<br>soll geprüft werden?</h2>
+      <p>Schildern Sie kurz Anlagenart, Standort und Projektphase. Im direkten Austausch lässt sich der passende Prüf- oder Unterstützungsumfang klären.</p>
+      <div class="contact-actions">
+        <a href="mailto:info@sv-jelden.de?subject=Anfrage%20Jelden%20Sachverständigenbüro"><strong>info@sv-jelden.de</strong><span>E-Mail schreiben</span></a>
+        <a href="tel:+491607940038"><strong>+49 160 794 00 38</strong><span>Direkt anrufen</span></a>
       </div>
-      <h2>Ihr Anliegen.<br>Unabhängig betrachtet.</h2>
-      <div class="contact-bottom">
-        <p>Schildern Sie kurz den technischen Sachverhalt. Im nächsten Schritt lässt sich klären, welche Form der Bewertung sinnvoll ist.</p>
-        <button type="button" data-contact-open>Erstgespräch anfragen</button>
-      </div>
+      <address>Tobias Jelden · Brehmstraße 3 · 40239 Düsseldorf</address>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="footer-brand"><span>TJ</span><p>Tobias Jelden<br>Sachverständiger Elektrotechnik</p></div>
-    <nav><a href="#expertise">Expertise</a><a href="#leistungen">Leistungen</a><a href="#vorgehen">Vorgehen</a><a href="#kontakt">Kontakt</a></nav>
-    <div class="footer-legal"><button data-legal="impressum">Impressum</button><button data-legal="datenschutz">Datenschutz</button></div>
-    <div class="footer-meta"><span>© <span data-year></span> Tobias Jelden</span><span>Designvorschau / nicht veröffentlicht</span></div>
+    <img src="assets/brand/logo-horizontal.jpg" alt="Jelden Sachverständigenbüro">
+    <nav><a href="#leistungen">Leistungen</a><a href="#pruefarten">Prüfarten</a><a href="#einsatzgebiet">Einsatzgebiet</a><a href="#kontakt">Kontakt</a></nav>
+    <div class="footer-legal"><button type="button" data-legal="impressum">Impressum</button><button type="button" data-legal="datenschutz">Datenschutz</button></div>
+    <div class="footer-meta"><span>© <span data-year></span> Jelden Sachverständigenbüro</span><span>Designvorschau · nicht veröffentlicht · noindex</span></div>
   </footer>
-
-  <dialog class="contact-dialog" data-contact-dialog>
-    <button class="dialog-close" type="button" data-dialog-close aria-label="Dialog schließen">×</button>
-    <span class="section-label">Projektanfrage</span>
-    <h2>Worum geht es?</h2>
-    <p>Diese Designvorschau versendet noch keine Daten. Kontaktdaten und ein sicherer Formular-Endpunkt werden vor Veröffentlichung ergänzt.</p>
-    <form data-contact-form>
-      <label>Name<input type="text" name="name" autocomplete="name" required></label>
-      <label>E-Mail<input type="email" name="email" autocomplete="email" required></label>
-      <label>Anliegen<textarea name="message" rows="4" required></textarea></label>
-      <label class="check"><input type="checkbox" required><span>Ich habe den Hinweis zur Designvorschau gelesen.</span></label>
-      <button type="submit">Anfrage vorbereiten</button>
-      <output data-form-status></output>
-    </form>
-  </dialog>
 
   <dialog class="legal-dialog" data-legal-dialog>
     <button class="dialog-close" type="button" data-legal-close aria-label="Dialog schließen">×</button>

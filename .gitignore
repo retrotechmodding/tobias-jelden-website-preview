@@ -1,6 +1,7 @@
 # Local review artifacts
 screenshots/
 scripts/
+qa-*.png
 
 # Unoptimized source media
 assets/video/source/
