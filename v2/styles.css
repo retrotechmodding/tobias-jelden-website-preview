@@ -11,7 +11,7 @@
 @layer base{
   :root{
     --deep:#063b4d;
-    --brand:#08465b;
+    --brand:#0a526b;
     --brand-2:#0a526b;
     --cyan:#8cc9da;
     --ice:#f7fbfc;
@@ -84,7 +84,7 @@
 }
 
 @layer layout{
-  .hero{position:relative;min-height:100svh;padding:calc(var(--header-h) + 72px) var(--gutter) 0;background:var(--brand);color:#fff;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.18fr) minmax(380px,.82fr);grid-template-rows:1fr auto;gap:35px;isolation:isolate}
+  .hero{position:relative;min-height:100svh;padding:calc(var(--header-h) + 72px) var(--gutter) 0;background:var(--brand);color:#fff;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:1fr auto;gap:35px;isolation:isolate}
   .hero-media{position:absolute;inset:0;z-index:-4;overflow:hidden;background:#063b4d;opacity:.25}
   .hero-media::after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(90deg,rgba(4,46,62,.72) 0%,rgba(4,46,62,.48) 48%,rgba(4,46,62,.68) 100%)}
   .hero-video{position:absolute;inset:-3%;width:106%;height:106%;object-fit:cover;pointer-events:none;filter:grayscale(1) saturate(.22) contrast(1.12);will-change:opacity;opacity:0}
@@ -92,21 +92,14 @@
   .hero-video-trafostation{object-position:center;animation:hero-media-b 18s ease-in-out infinite}
   @keyframes hero-media-a{0%,42%{opacity:1}50%,92%{opacity:0}100%{opacity:1}}
   @keyframes hero-media-b{0%,42%{opacity:0}50%,92%{opacity:1}100%{opacity:0}}
-  .hero-grid,.contact-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px);background-size:120px 120px;z-index:-2}
-  .hero-glow{position:absolute;z-index:-1;width:54vw;height:54vw;border-radius:50%;right:-8vw;top:9vh;background:radial-gradient(circle,rgba(140,201,218,.28),rgba(140,201,218,0) 68%)}
-  .hero-content{align-self:center;max-width:980px;padding-bottom:40px}
+  .hero-content{align-self:center;max-width:1120px;padding-bottom:40px}
   .kicker{color:#b9d9e2;margin-bottom:30px}
   .hero h1{font-size:clamp(4.2rem,6.6vw,8.6rem);line-height:.79;letter-spacing:-.07em;font-weight:520;white-space:nowrap}
   .hero h1 span{color:var(--cyan)}
   .hero-lead{max-width:730px;margin-top:42px;font-size:clamp(1.05rem,1.45vw,1.4rem);line-height:1.52;color:#d2e5ea}
   .hero-actions{display:flex;align-items:center;gap:30px;margin-top:36px}
   .hero-actions .text-link{color:#fff}
-  .hero-seal{align-self:center;justify-self:end;width:min(30vw,440px);aspect-ratio:1;border:1px solid rgba(255,255,255,.24);border-radius:50%;position:relative;display:grid;place-items:center}
-  .hero-seal img{width:38%;filter:drop-shadow(0 0 25px rgba(140,201,218,.2))}
-  .seal-ring{position:absolute;border:1px solid rgba(255,255,255,.12);border-radius:50%}
-  .seal-ring-one{inset:11%}.seal-ring-two{inset:24%}
-  .seal-code{position:absolute;font:700 .66rem/1 monospace;letter-spacing:.2em;color:#add1db}
-  .seal-code-top{top:12%}.seal-code-bottom{bottom:12%}
+
   .hero-facts{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line)}
   .hero-facts>div{min-height:112px;padding:20px 28px;display:grid;grid-template-columns:38px 1fr;align-content:center;border-right:1px solid var(--line)}
   .hero-facts>div:last-child{border-right:0}
@@ -165,7 +158,7 @@
   .faq-section h2{font-size:clamp(3rem,5.4vw,6.6rem);margin-top:35px}
 
   .contact{position:relative;min-height:850px;padding:clamp(90px,11vw,160px) var(--gutter);background:var(--deep);color:#fff;overflow:hidden;isolation:isolate;display:flex;flex-direction:column}
-  .contact-grid{z-index:-2}
+
   .contact-mark{position:absolute;right:-4vw;top:50%;transform:translateY(-50%);width:min(46vw,720px);opacity:.055;z-index:-1}
   .contact .section-code{color:var(--cyan)}
   .contact h2{font-size:clamp(4.2rem,8.2vw,10rem);margin:50px 0 70px}
@@ -211,7 +204,6 @@
     .hero-lead{font-size:1rem;margin-top:30px}
     .hero-actions{align-items:stretch;flex-direction:column;gap:20px}.hero-actions .button{width:100%}
     .hero-actions .text-link{align-self:flex-start}
-    .hero-seal{width:min(88vw,430px);grid-row:2;margin:20px auto 35px}
     .hero-facts{grid-template-columns:1fr;margin:0 calc(var(--gutter)*-1)}
     .hero-facts>div{border-right:0;border-bottom:1px solid var(--line);min-height:94px;padding-left:var(--gutter)}
     .statement{padding-block:85px;gap:45px}.statement h2{font-size:clamp(2.7rem,12vw,3.3rem);hyphens:manual}

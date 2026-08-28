@@ -17,6 +17,11 @@ Statische, nicht indexierbare Design- und Funktionsvorschau für das Jelden Sach
 - fachliche Unterstützung während der Bauphase
 - deutschlandweite Tätigkeit mit künftigem Schwerpunkt nördliches NRW und Niedersachsen
 
+## Mediennachweis
+
+- Kabelstollen Amsteg / Gotthard-Basistunnel: [Kecko, CC BY 2.0](https://commons.wikimedia.org/wiki/File:Amsteg_-_GBT_Cable_Tunnel_(30934988771).jpg); bearbeitet durch Ausschnitt, Farbgestaltung und Bewegung.
+- Vollständige Quellen- und Bearbeitungsangaben: `assets/video/hero-jelden-kabeltrassen-source.txt`.
+
 ## Status
 
 Das Repository ist ausschließlich eine GitHub-Pages-Designvorschau. Die Seite enthält `noindex,nofollow,noarchive`. Produktive Domain, Hosting, Formularziel, finale Rechtsangaben und Veröffentlichung sind nicht freigegeben.
