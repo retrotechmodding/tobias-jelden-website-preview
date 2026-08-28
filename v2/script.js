@@ -6,7 +6,7 @@ const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const syncHeroMotion = () => {
   heroVideos.forEach((video) => {
     video.muted = true;
-    if (reducedMotion.matches) {
+    if (reducedMotion.matches || document.hidden) {
       video.pause();
       return;
     }
@@ -18,6 +18,14 @@ const syncHeroMotion = () => {
 
 syncHeroMotion();
 reducedMotion.addEventListener?.('change', syncHeroMotion);
+document.addEventListener('visibilitychange', syncHeroMotion);
+
+const closeMenu = () => {
+  menuButton?.setAttribute('aria-expanded', 'false');
+  menuButton?.setAttribute('aria-label', 'Menü öffnen');
+  nav?.classList.remove('is-open');
+  document.body.classList.remove('menu-open');
+};
 
 menuButton?.addEventListener('click', () => {
   const open = menuButton.getAttribute('aria-expanded') !== 'true';
@@ -28,12 +36,11 @@ menuButton?.addEventListener('click', () => {
 });
 
 nav?.querySelectorAll('a').forEach((link) => {
-  link.addEventListener('click', () => {
-    menuButton?.setAttribute('aria-expanded', 'false');
-    menuButton?.setAttribute('aria-label', 'Menü öffnen');
-    nav.classList.remove('is-open');
-    document.body.classList.remove('menu-open');
-  });
+  link.addEventListener('click', closeMenu);
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') closeMenu();
 });
 
 document.querySelectorAll('.faq-item').forEach((item) => {
@@ -43,6 +50,7 @@ document.querySelectorAll('.faq-item').forEach((item) => {
     const nextOpen = !item.classList.contains('is-open');
     item.classList.toggle('is-open', nextOpen);
     button.setAttribute('aria-expanded', String(nextOpen));
+    item.querySelector('.faq-answer')?.setAttribute('aria-hidden', String(!nextOpen));
     if (icon) icon.textContent = nextOpen ? '−' : '+';
   });
 });

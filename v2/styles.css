@@ -40,6 +40,7 @@
   .button-light{background:#fff;color:var(--brand);border-color:#fff}
   .button-light:hover{background:var(--cyan);border-color:var(--cyan);color:var(--deep)}
   .text-link,.line-link{display:inline-flex;align-items:center;justify-content:space-between;gap:28px;text-decoration:none;padding-bottom:8px;border-bottom:1px solid currentColor;font-size:.83rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+  :where(a,button):focus-visible{outline:3px solid #fff;outline-offset:3px;box-shadow:0 0 0 6px var(--brand-2)}
 }
 
 @layer components{
@@ -119,6 +120,12 @@
   .statement h2 span{color:var(--brand-2)}
   .statement-copy{align-self:end;font-size:1.08rem;line-height:1.68;color:#45636c}
   .statement-copy .line-link{margin-top:35px;color:var(--brand)}
+  .profile-proof{display:grid;grid-template-columns:68px minmax(0,1fr);gap:20px;align-items:center;margin-top:34px;padding:24px 0;border-block:1px solid var(--light-line)}
+  .profile-monogram{width:68px;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:var(--brand);color:#fff;font-size:1.05rem;font-weight:750;letter-spacing:.08em}
+  .profile-proof strong,.profile-proof>div>span{display:block}
+  .profile-proof strong{color:var(--ink);font-size:1.12rem;line-height:1.2}
+  .profile-proof>div>span{margin-top:5px;font-size:.86rem;line-height:1.45;color:#58737c}
+  .profile-proof a{display:inline-flex;gap:8px;margin-top:11px;color:var(--brand);font-size:.72rem;line-height:1.35;font-weight:750;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid currentColor}
 
   .services{background:var(--deep);color:#fff;padding:clamp(85px,9vw,130px) 0}
   .section-head{display:grid;grid-template-columns:1.4fr .6fr;gap:60px;padding:0 var(--gutter) 75px}
@@ -208,6 +215,7 @@
     .hero-facts{grid-template-columns:1fr;margin:0 calc(var(--gutter)*-1)}
     .hero-facts>div{border-right:0;border-bottom:1px solid var(--line);min-height:94px;padding-left:var(--gutter)}
     .statement{padding-block:85px;gap:45px}.statement h2{font-size:clamp(2.7rem,12vw,3.3rem);hyphens:manual}
+    .profile-proof{grid-template-columns:58px minmax(0,1fr);gap:16px;padding-block:21px}.profile-monogram{width:58px}
     .section-head{grid-template-columns:1fr;padding-bottom:45px}.section-head p{align-self:auto}
     .service-row{grid-template-columns:40px minmax(0,1fr);min-height:180px;padding-block:30px;gap:13px}.service-tag{grid-column:2;text-align:left}.service-row h3{font-size:1.88rem;overflow-wrap:normal;hyphens:manual}.service-row p{font-size:.92rem}
     .modes-intro{min-height:570px}.modes-list article{padding-left:52px}.modes-list article>span{top:51px}

@@ -5,7 +5,7 @@ Statische, nicht indexierbare Design- und Funktionsvorschau für das Jelden Sach
 ## Vorschauen
 
 - Variante 1: https://retrotechmodding.github.io/tobias-jelden-website-preview/
-- Variante 2 – monolithisch: https://retrotechmodding.github.io/tobias-jelden-website-preview/v2/
+- Finale monolithische Vorschau: https://retrotechmodding.github.io/tobias-jelden-website-preview/v2/
 
 ## Bestätigte Grundlage
 

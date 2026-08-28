@@ -4,13 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow,noarchive">
-  <meta name="description" content="Designvariante 2 für das Jelden Sachverständigenbüro: Prüfungen elektrotechnischer Anlagen nach PrüfVO und VdS.">
+  <meta name="description" content="Jelden Sachverständigenbüro: Prüfungen elektrotechnischer Anlagen nach PrüfVO und VdS – deutschlandweit und bereits während der Bauphase.">
   <meta name="theme-color" content="#08465b">
-  <title>Jelden Sachverständigenbüro | Designvariante 2</title>
+  <meta property="og:title" content="Jelden Sachverständigenbüro | Prüfungen Elektrotechnik">
+  <meta property="og:description" content="Prüfungen elektrotechnischer Anlagen nach PrüfVO und VdS – bei Erstprüfungen, wiederkehrenden Prüfungen und während der Bauphase.">
+  <meta property="og:type" content="website">
+  <title>Jelden Sachverständigenbüro | Prüfungen Elektrotechnik</title>
   <link rel="icon" href="../assets/favicon.ico?v=5">
   <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=5">
-  <link rel="stylesheet" href="styles.css?v=2">
-  <script src="script.js?v=2" defer></script>
+  <link rel="stylesheet" href="styles.css?v=4">
+  <script src="script.js?v=4" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Zum Inhalt springen</a>
@@ -19,10 +22,10 @@
     <a class="brand" href="#top" aria-label="Jelden Sachverständigenbüro – Start">
       <img src="../assets/brand/logo-white-transparent.png" alt="Jelden Sachverständigenbüro" width="449" height="136">
     </a>
-    <button class="menu-toggle" type="button" aria-label="Menü öffnen" aria-expanded="false" data-menu-toggle>
+    <button class="menu-toggle" type="button" aria-label="Menü öffnen" aria-controls="main-nav" aria-expanded="false" data-menu-toggle>
       <span></span><span></span>
     </button>
-    <nav class="main-nav" aria-label="Hauptnavigation" data-nav>
+    <nav class="main-nav" id="main-nav" aria-label="Hauptnavigation" data-nav>
       <a href="#leistungen">Leistungen</a>
       <a href="#pruefungen">Prüfungen</a>
       <a href="#gebiet">Einsatzgebiet</a>
@@ -71,7 +74,15 @@
       <div class="section-code">JELDEN / PROFIL</div>
       <h2 id="statement-title">Sachverständigen&shy;prüfung.<br><span>Klar fokussiert.</span></h2>
       <div class="statement-copy">
-        <p>Tobias Jelden ist Prüfsachverständiger in der Fachrichtung Elektrotechnik (NRW). Das Leistungsspektrum konzentriert sich auf klar definierte Prüfungen elektrotechnischer Anlagen und die fachliche Unterstützung in Bauphasen.</p>
+        <p>Tobias Jelden ist Prüfsachverständiger in der Fachrichtung Elektrotechnik (NRW) und VdS-anerkannter Elektrosachverständiger. Das Leistungsspektrum konzentriert sich auf klar definierte Prüfungen elektrotechnischer Anlagen und die fachliche Unterstützung in Bauphasen.</p>
+        <div class="profile-proof" aria-label="Qualifikation von Tobias Jelden">
+          <span class="profile-monogram" aria-hidden="true">TJ</span>
+          <div>
+            <strong>Tobias Jelden</strong>
+            <span>Prüfsachverständiger Elektrotechnik (NRW)<br>VdS-anerkannter Elektrosachverständiger</span>
+            <a href="https://vds.de/zertifikate/zertifikat/3F853292" target="_blank" rel="noopener noreferrer">VdS-Zertifikat ES 21912 <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
         <a class="line-link" href="#leistungen">Leistungen ansehen <span>↓</span></a>
       </div>
     </section>
@@ -150,16 +161,16 @@
       </div>
       <div class="faq-list" data-accordion>
         <article class="faq-item is-open">
-          <button type="button" aria-expanded="true"><span>Welche Anlagen werden geprüft?</span><span class="faq-icon">−</span></button>
-          <div class="faq-answer"><p>Elektrische Anlagen, Sicherheitsstromversorgung und Sicherheitsbeleuchtung sowie Brandmelde- und Alarmierungsanlagen im genannten PrüfVO-Kontext. Hinzu kommen Prüfungen elektrischer Anlagen nach VdS.</p></div>
+          <button id="faq-question-1" type="button" aria-expanded="true" aria-controls="faq-answer-1"><span>Welche Anlagen werden geprüft?</span><span class="faq-icon">−</span></button>
+          <div class="faq-answer" id="faq-answer-1" role="region" aria-labelledby="faq-question-1" aria-hidden="false"><p>Elektrische Anlagen, Sicherheitsstromversorgung und Sicherheitsbeleuchtung sowie Brandmelde- und Alarmierungsanlagen im genannten PrüfVO-Kontext. Hinzu kommen Prüfungen elektrischer Anlagen nach VdS.</p></div>
         </article>
         <article class="faq-item">
-          <button type="button" aria-expanded="false"><span>Zu welchem Zeitpunkt kann Jelden unterstützen?</span><span class="faq-icon">+</span></button>
-          <div class="faq-answer"><p>Bei Erstprüfungen, wiederkehrenden Prüfungen und mit fachlicher Unterstützung während der Bauphasen.</p></div>
+          <button id="faq-question-2" type="button" aria-expanded="false" aria-controls="faq-answer-2"><span>Zu welchem Zeitpunkt kann Jelden unterstützen?</span><span class="faq-icon">+</span></button>
+          <div class="faq-answer" id="faq-answer-2" role="region" aria-labelledby="faq-question-2" aria-hidden="true"><p>Bei Erstprüfungen, wiederkehrenden Prüfungen und mit fachlicher Unterstützung während der Bauphasen.</p></div>
         </article>
         <article class="faq-item">
-          <button type="button" aria-expanded="false"><span>Wo ist das Sachverständigenbüro tätig?</span><span class="faq-icon">+</span></button>
-          <div class="faq-answer"><p>Deutschlandweit. Der künftige Schwerpunkt liegt im nördlichen NRW und in Niedersachsen.</p></div>
+          <button id="faq-question-3" type="button" aria-expanded="false" aria-controls="faq-answer-3"><span>Wo ist das Sachverständigenbüro tätig?</span><span class="faq-icon">+</span></button>
+          <div class="faq-answer" id="faq-answer-3" role="region" aria-labelledby="faq-question-3" aria-hidden="true"><p>Deutschlandweit. Der künftige Schwerpunkt liegt im nördlichen NRW und in Niedersachsen.</p></div>
         </article>
       </div>
     </section>
@@ -182,22 +193,22 @@
   <footer class="site-footer">
     <a class="footer-brand" href="#top"><img src="../assets/brand/logo-teal-transparent.png" alt="Jelden Sachverständigenbüro"></a>
     <address>Tobias Jelden · Brehmstraße 3 · 40239 Düsseldorf</address>
-    <div class="footer-links"><button type="button" data-legal="impressum">Impressum</button><button type="button" data-legal="privacy">Datenschutz</button><a href="../">Variante 1</a></div>
-    <p>Design- und Funktionsvorschau · nicht indexiert · <span data-year></span></p>
+    <div class="footer-links"><button type="button" data-legal="impressum">Impressum</button><button type="button" data-legal="privacy">Datenschutz</button></div>
+    <p>© <span data-year></span> Jelden Sachverständigenbüro.</p>
   </footer>
 
-  <dialog class="legal-dialog" data-dialog="impressum" data-legal-dialog>
+  <dialog class="legal-dialog" data-dialog="impressum" data-legal-dialog aria-labelledby="impressum-title">
     <button class="dialog-close" type="button" data-dialog-close data-legal-close aria-label="Schließen">×</button>
     <span class="section-code">ENTWURF</span>
-    <h2>Impressum</h2>
+    <h2 id="impressum-title">Impressum</h2>
     <p><strong>Tobias Jelden</strong><br>Prüfsachverständiger – Fachrichtung Elektrotechnik (NRW)<br>Brehmstraße 3<br>40239 Düsseldorf</p>
     <p>Telefon: +49 160 794 00 38<br>E-Mail: info@sv-jelden.de</p>
     <p><strong>Hinweis:</strong> Berufsrechtliche Pflichtangaben sind vor der Liveschaltung vollständig zu ergänzen und rechtlich zu prüfen.</p>
   </dialog>
-  <dialog class="legal-dialog" data-dialog="privacy">
+  <dialog class="legal-dialog" data-dialog="privacy" aria-labelledby="privacy-title">
     <button class="dialog-close" type="button" data-dialog-close aria-label="Schließen">×</button>
     <span class="section-code">ENTWURF</span>
-    <h2>Datenschutz</h2>
+    <h2 id="privacy-title">Datenschutz</h2>
     <p>Diese Designvorschau enthält keine Formulare, Analyse- oder Trackingdienste. Beim Aufruf über GitHub Pages gelten ergänzend die technischen Rahmenbedingungen des Hosting-Anbieters.</p>
     <p>Eine vollständige Datenschutzerklärung ist vor der Liveschaltung auf den Produktivdomains bereitzustellen und rechtlich zu prüfen.</p>
   </dialog>
