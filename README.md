@@ -2,9 +2,10 @@
 
 Statische, nicht indexierbare Design- und Funktionsvorschau für das Jelden Sachverständigenbüro.
 
-## Vorschau
+## Vorschauen
 
-https://retrotechmodding.github.io/tobias-jelden-website-preview/
+- Variante 1: https://retrotechmodding.github.io/tobias-jelden-website-preview/
+- Variante 2 – monolithisch: https://retrotechmodding.github.io/tobias-jelden-website-preview/v2/
 
 ## Bestätigte Grundlage
 
