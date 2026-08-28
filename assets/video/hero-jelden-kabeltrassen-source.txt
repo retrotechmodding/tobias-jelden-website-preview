@@ -1,8 +1,0 @@
-Hero media source: Kabelstollen Amsteg / Gotthard-Basistunnel
-Original title: Amsteg - GBT Cable Tunnel (30934988771).jpg
-Author: Kecko
-Source: https://commons.wikimedia.org/wiki/File:Amsteg_-_GBT_Cable_Tunnel_(30934988771).jpg
-License: Creative Commons Attribution 2.0 Generic (CC BY 2.0)
-License URL: https://creativecommons.org/licenses/by/2.0/
-
-Modifications: 16:9 crop, subtle seamless zoom animation, format conversion to MP4/WebM, poster extraction, and website color treatment.

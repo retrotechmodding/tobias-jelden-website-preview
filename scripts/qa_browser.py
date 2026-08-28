@@ -181,7 +181,7 @@ def main():
             raise SystemExit("telephone link target mismatch")
         if any(not r["vdsProof"] or not r["profileProof"] or r["previewLanguage"] for r in results.values()):
             raise SystemExit("final content marker mismatch")
-        if any(len(r["heroVideos"]) != 2 for r in results.values()):
+        if any(len(r["heroVideos"]) != 1 for r in results.values()):
             raise SystemExit("hero video count mismatch")
         if any(v["error"] for r in results.values() for v in r["heroVideos"]):
             raise SystemExit("hero video loading error")
