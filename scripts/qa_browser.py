@@ -165,8 +165,6 @@ def main():
             (OUTPUT_DIR / f"{OUTPUT_PREFIX}-{label}-full.png").write_bytes(base64.b64decode(full["data"]))
             results[label] = {**metrics, "contentHeight": layout["height"]}
 
-        print(json.dumps(results, ensure_ascii=False, indent=2))
-
         if results["desktop"]["innerWidth"] != 1440 or results["mobile"]["innerWidth"] != 390:
             raise SystemExit("viewport mismatch")
         if any(r["scrollWidth"] != r["innerWidth"] for r in results.values()):
@@ -217,6 +215,7 @@ def main():
         results["reducedMotion"] = reduced_motion
         if not reduced_motion["matches"] or any(v["display"] != "none" or not v["paused"] for v in reduced_motion["videos"]):
             raise SystemExit("reduced motion fallback failure")
+        print(json.dumps(results, ensure_ascii=False, indent=2))
         ws.close()
     finally:
         try:
