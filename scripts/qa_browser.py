@@ -139,6 +139,16 @@ def main():
               telHrefs: [...document.querySelectorAll('a[href^=\"tel:\"]')].map(a => a.getAttribute('href')),
               vdsProof: document.querySelector('a[href=\"https://vds.de/zertifikate/zertifikat/3F853292\"]') !== null,
               profileProof: document.querySelector('.profile-proof') !== null,
+              territoryMap: (() => {
+                const map = document.querySelector('.territory-map');
+                const image = map?.querySelector('img');
+                return {
+                  exists: Boolean(map && image),
+                  loaded: Boolean(image?.complete && image?.naturalWidth > 0),
+                  src: image?.getAttribute('src') || null,
+                  opacity: map ? getComputedStyle(map).opacity : null
+                };
+              })(),
               previewLanguage: /Designvariante|Variante 1/.test(document.body.innerText)
             })"""
             metrics = json.loads(call("Runtime.evaluate", expression=expression, returnByValue=True)["result"]["value"])
@@ -242,6 +252,34 @@ def main():
             metrics["clipboardMotion"] = json.loads(clipboard_result["value"])
             clipboard_shot = call("Page.captureScreenshot", format="png", captureBeyondViewport=False, fromSurface=True)
             (OUTPUT_DIR / f"{OUTPUT_PREFIX}-{label}-clipboard.png").write_bytes(base64.b64decode(clipboard_shot["data"]))
+            territory = json.loads(
+                call(
+                    "Runtime.evaluate",
+                    expression="""JSON.stringify((() => {
+                      const section = document.querySelector('.territory');
+                      const rect = section.getBoundingClientRect();
+                      const map = section.querySelector('.territory-map');
+                      const mapRect = map.getBoundingClientRect();
+                      return {
+                        x: 0,
+                        y: rect.top + scrollY,
+                        width: innerWidth,
+                        height: rect.height,
+                        map: {left: mapRect.left, right: mapRect.right, top: mapRect.top - rect.top, bottom: mapRect.bottom - rect.top}
+                      };
+                    })())""",
+                    returnByValue=True,
+                )["result"]["value"]
+            )
+            metrics["territoryMap"]["bounds"] = territory["map"]
+            territory_shot = call(
+                "Page.captureScreenshot",
+                format="png",
+                captureBeyondViewport=True,
+                fromSurface=True,
+                clip={"x": 0, "y": territory["y"], "width": territory["width"], "height": territory["height"], "scale": 1},
+            )
+            (OUTPUT_DIR / f"{OUTPUT_PREFIX}-{label}-territory.png").write_bytes(base64.b64decode(territory_shot["data"]))
             results[label] = {**metrics, "contentHeight": layout["height"]}
 
         if results["desktop"]["innerWidth"] != 1440 or results["mobile"]["innerWidth"] != 390:
@@ -250,6 +288,8 @@ def main():
             raise SystemExit("horizontal overflow")
         if any(r["failedImages"] for r in results.values()):
             raise SystemExit("failed images")
+        if any(not r["territoryMap"]["exists"] or not r["territoryMap"]["loaded"] for r in results.values()):
+            raise SystemExit("territory map asset failure")
         if any(r["title"] != "Prüfsachverständiger Elektrotechnik | Jelden" for r in results.values()):
             raise SystemExit("final page title mismatch")
         if any(r["heroTypography"]["ratio"] < 0.85 for r in results.values()):
