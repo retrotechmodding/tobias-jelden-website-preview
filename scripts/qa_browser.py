@@ -171,7 +171,7 @@ def main():
             raise SystemExit("horizontal overflow")
         if any(r["failedImages"] for r in results.values()):
             raise SystemExit("failed images")
-        if any(r["title"] != "Jelden Sachverständigenbüro | Prüfungen Elektrotechnik" for r in results.values()):
+        if any(r["title"] != "Prüfsachverständiger Elektrotechnik | Jelden" for r in results.values()):
             raise SystemExit("final page title mismatch")
         if any(r["robots"] != "noindex,nofollow,noarchive" for r in results.values()):
             raise SystemExit("preview indexing guard mismatch")

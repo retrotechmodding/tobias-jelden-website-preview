@@ -89,7 +89,7 @@
   .hero-media::after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(90deg,rgba(4,46,62,.72) 0%,rgba(4,46,62,.48) 48%,rgba(4,46,62,.68) 100%)}
   .hero-video{position:absolute;inset:-3%;width:106%;height:106%;object-fit:cover;pointer-events:none;filter:grayscale(1) saturate(.22) contrast(1.12);opacity:1}
   .hero-video-pruefanlagen{object-position:center center}
-  .hero-content{align-self:center;max-width:1120px;padding-bottom:40px}
+  .hero-content{align-self:center;min-width:0;width:100%;max-width:1120px;padding-bottom:40px}
   .kicker{color:#b9d9e2;margin-bottom:30px}
   .hero h1{font-size:clamp(4.2rem,6.6vw,8.6rem);line-height:.79;letter-spacing:-.07em;font-weight:520;white-space:nowrap}
   .hero h1 span{color:var(--cyan)}
@@ -197,7 +197,7 @@
     .hero-media{opacity:.2}
     .hero-content{padding-bottom:0}
     .kicker{line-height:1.5;margin-bottom:23px}
-    .hero h1{font-size:clamp(3.2rem,16vw,5.1rem);line-height:.82;white-space:normal}
+    .hero h1{font-size:clamp(2.9rem,14vw,4.5rem);line-height:.82;white-space:normal;overflow-wrap:normal;word-break:normal}
     .hero-lead{font-size:1rem;margin-top:30px}
     .hero-actions{align-items:stretch;flex-direction:column;gap:20px}.hero-actions .button{width:100%}
     .hero-actions .text-link{align-self:flex-start}
