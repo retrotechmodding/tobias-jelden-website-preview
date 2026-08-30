@@ -321,8 +321,11 @@ def main():
             raise SystemExit("horizontal overflow")
         if any(r["failedImages"] for r in results.values()):
             raise SystemExit("failed images")
-        if any(abs(r["contactMark"]["center"] - r["innerWidth"] / 2) > 2 for r in results.values()):
-            raise SystemExit("contact background mark is not centered")
+        if any(
+            not 0.02 <= (r["contactMark"]["center"] / r["innerWidth"] - 0.5) <= 0.045
+            for r in results.values()
+        ):
+            raise SystemExit("contact background mark right offset is outside target range")
         if any(not r["territoryMap"]["exists"] or not r["territoryMap"]["loaded"] for r in results.values()):
             raise SystemExit("territory map asset failure")
         if any(r["title"] != "Prüfsachverständiger Elektrotechnik | Jelden" for r in results.values()):
