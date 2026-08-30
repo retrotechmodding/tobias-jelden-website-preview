@@ -170,7 +170,8 @@ def main():
               const board = document.querySelector('[data-clipboard]');
               const items = [...document.querySelectorAll('[data-clipboard-item]')];
               if (!section || !track || !board || items.length !== 4) return JSON.stringify({missing: true});
-              const wait = () => new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve, 160)));
+              const pause = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
+              const wait = () => new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve, 480)));
               const distance = Math.max(1, track.offsetHeight - innerHeight);
               const trackTop = track.getBoundingClientRect().top + scrollY;
               document.documentElement.style.scrollBehavior = 'auto';
@@ -195,13 +196,26 @@ def main():
                   visible: items.filter(item => Number(getComputedStyle(item).opacity) > 0.1).length
                 });
               }
-              window.scrollTo(0, trackTop + distance * 0.5);
+              window.scrollTo(0, trackTop + distance * 0.07);
+              dispatchEvent(new Event('scroll'));
+              await wait();
+              window.scrollTo(0, trackTop + distance * 0.93);
+              dispatchEvent(new Event('scroll'));
+              await pause(34);
+              const smoothEarly = Math.abs(Number(items[0].style.getPropertyValue('--service-offset')));
+              await pause(100);
+              const smoothMiddle = Math.abs(Number(items[0].style.getPropertyValue('--service-offset')));
+              await pause(400);
+              const smoothEnd = Math.abs(Number(items[0].style.getPropertyValue('--service-offset')));
+              window.scrollTo(0, trackTop + distance * 0.64);
               dispatchEvent(new Event('scroll'));
               await wait();
               return JSON.stringify({
                 missing: false,
                 itemCount: items.length,
                 states,
+                motion: board.dataset.motion,
+                smoothSamples: [smoothEarly, smoothMiddle, smoothEnd],
                 active: items.findIndex(item => item.classList.contains('is-active')),
                 checked: items.filter(item => item.classList.contains('is-checked')).length,
                 boardTransform: getComputedStyle(board).transform,
@@ -262,6 +276,11 @@ def main():
                 raise SystemExit(f"clipboard active service visibility failure ({viewport}): {json.dumps(states, ensure_ascii=False)}")
             if results[viewport]["clipboardMotion"]["boardTransform"] != "none":
                 raise SystemExit(f"clipboard brand frame should remain stable ({viewport})")
+            if results[viewport]["clipboardMotion"]["motion"] != "smooth":
+                raise SystemExit(f"clipboard smooth-motion marker missing ({viewport})")
+            early, middle, end = results[viewport]["clipboardMotion"]["smoothSamples"]
+            if not (0.05 < early < 2.5 and early < middle < end and end > 2.9):
+                raise SystemExit(f"clipboard temporal smoothing failure ({viewport}): {[early, middle, end]}")
 
         call(
             "Emulation.setEmulatedMedia",

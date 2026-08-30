@@ -26,11 +26,56 @@ const clipboardTrack = clipboardSection?.querySelector('.clipboard-track');
 const clipboardItems = [...document.querySelectorAll('[data-clipboard-item]')];
 const serviceCurrent = clipboard?.querySelector('[data-service-current]');
 const serviceProgress = [...(clipboard?.querySelectorAll('.service-progress i') ?? [])];
+let clipboardTargetIndex = 0;
+let clipboardDisplayIndex = 0;
+let clipboardFrame = 0;
+let clipboardFrameTime = 0;
+let clipboardInitialized = false;
+
+const renderClipboard = (rawIndex) => {
+  const activeIndex = Math.min(clipboardItems.length - 1, Math.max(0, Math.round(rawIndex)));
+  clipboardItems.forEach((item, index) => {
+    const offset = index - rawIndex;
+    const opacity = Math.max(0, Math.min(1, 1.4 - Math.abs(offset)));
+    item.style.setProperty('--service-offset', offset.toFixed(4));
+    item.style.setProperty('--service-opacity', opacity.toFixed(4));
+    item.classList.toggle('is-active', index === activeIndex);
+    item.classList.toggle('is-checked', index <= activeIndex);
+  });
+  const currentLabel = String(activeIndex + 1).padStart(2, '0');
+  clipboard.dataset.currentService = currentLabel;
+  clipboard.dataset.motion = 'smooth';
+  if (serviceCurrent) serviceCurrent.textContent = currentLabel;
+  serviceProgress.forEach((bar, index) => bar.classList.toggle('is-current', index === activeIndex));
+};
+
+const animateClipboard = (time) => {
+  if (reducedMotion.matches) {
+    clipboardFrame = 0;
+    clipboardFrameTime = 0;
+    return;
+  }
+  const elapsed = clipboardFrameTime ? Math.min(50, time - clipboardFrameTime) : 16;
+  clipboardFrameTime = time;
+  const smoothing = 1 - Math.exp(-elapsed / 58);
+  clipboardDisplayIndex += (clipboardTargetIndex - clipboardDisplayIndex) * smoothing;
+  if (Math.abs(clipboardTargetIndex - clipboardDisplayIndex) < .001) clipboardDisplayIndex = clipboardTargetIndex;
+  renderClipboard(clipboardDisplayIndex);
+  if (clipboardDisplayIndex !== clipboardTargetIndex) {
+    clipboardFrame = requestAnimationFrame(animateClipboard);
+  } else {
+    clipboardFrame = 0;
+    clipboardFrameTime = 0;
+  }
+};
 
 const syncClipboardMotion = () => {
-  if (!clipboardSection || !clipboard || !clipboardItems.length) return;
-
+  if (!clipboardSection || !clipboardTrack || !clipboard || !clipboardItems.length) return;
   if (reducedMotion.matches) {
+    if (clipboardFrame) cancelAnimationFrame(clipboardFrame);
+    clipboardFrame = 0;
+    clipboardFrameTime = 0;
+    clipboardInitialized = false;
     clipboardItems.forEach((item) => {
       item.classList.remove('is-active');
       item.classList.add('is-checked');
@@ -42,29 +87,22 @@ const syncClipboardMotion = () => {
     return;
   }
 
-  const rect = clipboardTrack?.getBoundingClientRect() ?? clipboardSection.getBoundingClientRect();
-  const distance = Math.max(1, (clipboardTrack?.offsetHeight ?? clipboardSection.offsetHeight) - window.innerHeight);
+  const rect = clipboardTrack.getBoundingClientRect();
+  const distance = Math.max(1, clipboardTrack.offsetHeight - window.innerHeight);
   const progress = Math.min(1, Math.max(0, -rect.top / distance));
   const timeline = progress * (clipboardItems.length * 2 - 1);
   const segment = Math.min(clipboardItems.length * 2 - 2, Math.floor(timeline));
   const segmentProgress = timeline - segment;
   const baseIndex = Math.floor(segment / 2);
   const transitionProgress = segmentProgress * segmentProgress * (3 - 2 * segmentProgress);
-  const rawIndex = segment % 2 === 0 ? baseIndex : baseIndex + transitionProgress;
-  const activeIndex = Math.min(clipboardItems.length - 1, Math.round(rawIndex));
-
-  clipboardItems.forEach((item, index) => {
-    const offset = index - rawIndex;
-    const opacity = Math.max(0, 1 - Math.abs(offset));
-    item.style.setProperty('--service-offset', offset.toFixed(3));
-    item.style.setProperty('--service-opacity', opacity.toFixed(3));
-    item.classList.toggle('is-active', index === activeIndex);
-    item.classList.toggle('is-checked', index <= activeIndex);
-  });
-  const currentLabel = String(activeIndex + 1).padStart(2, '0');
-  clipboard.dataset.currentService = currentLabel;
-  if (serviceCurrent) serviceCurrent.textContent = currentLabel;
-  serviceProgress.forEach((bar, index) => bar.classList.toggle('is-current', index === activeIndex));
+  clipboardTargetIndex = segment % 2 === 0 ? baseIndex : baseIndex + transitionProgress;
+  if (!clipboardInitialized) {
+    clipboardDisplayIndex = clipboardTargetIndex;
+    clipboardInitialized = true;
+    renderClipboard(clipboardDisplayIndex);
+    return;
+  }
+  if (!clipboardFrame) clipboardFrame = requestAnimationFrame(animateClipboard);
 };
 
 if (clipboardSection && clipboard) {
