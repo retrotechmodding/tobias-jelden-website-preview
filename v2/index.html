@@ -12,8 +12,8 @@
   <title>Prüfsachverständiger Elektrotechnik | Jelden</title>
   <link rel="icon" href="../assets/favicon.ico?v=5">
   <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=5">
-  <link rel="stylesheet" href="styles.css?v=9">
-  <script src="script.js?v=6" defer></script>
+  <link rel="stylesheet" href="styles.css?v=10">
+  <script src="script.js?v=7" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Zum Inhalt springen</a>
@@ -79,19 +79,19 @@
         <span class="section-code">LEISTUNGSBEREICHE / 04</span>
         <h2 id="services-title">Was geprüft wird.</h2>
         <p>Anlagenart, Standort und Prüfungsanlass bestimmen den konkreten Umfang.</p>
-        <span class="scroll-note" aria-hidden="true">Scrollen zum Prüfen <span>↓</span></span>
+        <span class="scroll-note" aria-hidden="true">Scrollen: Leistungen durchlaufen <span>↓</span></span>
       </header>
       <div class="clipboard-track">
         <div class="clipboard-stage">
-          <div class="clipboard" data-clipboard>
+          <div class="clipboard" data-clipboard data-current-service="01">
             <div class="clipboard-clip" aria-hidden="true"><span></span></div>
             <div class="clipboard-sheet">
               <div class="sheet-head">
-                <span>JELDEN / PRÜFPROTOKOLL</span>
-                <strong>Leistungs-Checkliste</strong>
-                <small>Fachrichtung Elektrotechnik</small>
+                <img class="sheet-logo" src="../assets/brand/logo-teal-transparent.png" alt="Jelden Sachverständigenbüro" width="449" height="136">
+                <div><span>PRÜFPROTOKOLL / LEISTUNGEN</span><strong>Leistungs-Checkliste</strong></div>
+                <small>Fachrichtung<br>Elektrotechnik</small>
               </div>
-              <div class="service-list" aria-label="Vier Leistungsbereiche">
+              <div class="service-list" aria-label="Vier Leistungsbereiche, die beim Scrollen nacheinander angezeigt werden">
                 <article class="service-row is-active is-checked" data-clipboard-item>
                   <span class="service-check" aria-hidden="true">✓</span>
                   <div><span class="service-number">01</span><h3>Elektrische Anlagen nach PrüfVO</h3><p>Prüfungen elektrischer Anlagen im bestätigten Leistungsumfang für NRW, Hamburg und Rheinland-Pfalz.</p></div>
@@ -113,7 +113,11 @@
                   <span class="service-tag">VdS</span>
                 </article>
               </div>
-              <div class="sheet-foot" aria-hidden="true"><span>04 Prüffelder</span><span>Standort + Anlass beachten</span></div>
+              <div class="sheet-foot" aria-hidden="true">
+                <span class="sheet-counter"><b data-service-current>01</b> / 04</span>
+                <span class="service-progress"><i class="is-current"></i><i></i><i></i><i></i></span>
+                <span>Standort + Anlass beachten</span>
+              </div>
             </div>
           </div>
         </div>

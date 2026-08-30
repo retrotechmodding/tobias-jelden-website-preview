@@ -22,35 +22,49 @@ document.addEventListener('visibilitychange', syncHeroMotion);
 
 const clipboardSection = document.querySelector('[data-clipboard-section]');
 const clipboard = document.querySelector('[data-clipboard]');
+const clipboardTrack = clipboardSection?.querySelector('.clipboard-track');
 const clipboardItems = [...document.querySelectorAll('[data-clipboard-item]')];
-const compactClipboard = window.matchMedia('(max-width: 1100px)');
+const serviceCurrent = clipboard?.querySelector('[data-service-current]');
+const serviceProgress = [...(clipboard?.querySelectorAll('.service-progress i') ?? [])];
 
 const syncClipboardMotion = () => {
   if (!clipboardSection || !clipboard || !clipboardItems.length) return;
 
-  if (reducedMotion.matches || compactClipboard.matches) {
-    clipboard.style.removeProperty('--clipboard-rotate');
-    clipboard.style.removeProperty('--clipboard-lift');
+  if (reducedMotion.matches) {
     clipboardItems.forEach((item) => {
       item.classList.remove('is-active');
       item.classList.add('is-checked');
+      item.style.removeProperty('--service-offset');
+      item.style.removeProperty('--service-opacity');
     });
+    if (serviceCurrent) serviceCurrent.textContent = '04';
+    serviceProgress.forEach((bar) => bar.classList.remove('is-current'));
     return;
   }
 
-  const rect = clipboardSection.getBoundingClientRect();
-  const distance = Math.max(1, clipboardSection.offsetHeight - window.innerHeight);
+  const rect = clipboardTrack?.getBoundingClientRect() ?? clipboardSection.getBoundingClientRect();
+  const distance = Math.max(1, (clipboardTrack?.offsetHeight ?? clipboardSection.offsetHeight) - window.innerHeight);
   const progress = Math.min(1, Math.max(0, -rect.top / distance));
-  const rotation = -2.4 + progress * 4.8 + Math.sin(progress * Math.PI * 4) * 0.45;
-  const lift = Math.sin(progress * Math.PI) * -10;
-  const activeIndex = Math.min(clipboardItems.length - 1, Math.floor(progress * clipboardItems.length));
+  const timeline = progress * (clipboardItems.length * 2 - 1);
+  const segment = Math.min(clipboardItems.length * 2 - 2, Math.floor(timeline));
+  const segmentProgress = timeline - segment;
+  const baseIndex = Math.floor(segment / 2);
+  const transitionProgress = segmentProgress * segmentProgress * (3 - 2 * segmentProgress);
+  const rawIndex = segment % 2 === 0 ? baseIndex : baseIndex + transitionProgress;
+  const activeIndex = Math.min(clipboardItems.length - 1, Math.round(rawIndex));
 
-  clipboard.style.setProperty('--clipboard-rotate', `${rotation.toFixed(2)}deg`);
-  clipboard.style.setProperty('--clipboard-lift', `${lift.toFixed(1)}px`);
   clipboardItems.forEach((item, index) => {
+    const offset = index - rawIndex;
+    const opacity = Math.max(0, 1 - Math.abs(offset));
+    item.style.setProperty('--service-offset', offset.toFixed(3));
+    item.style.setProperty('--service-opacity', opacity.toFixed(3));
     item.classList.toggle('is-active', index === activeIndex);
     item.classList.toggle('is-checked', index <= activeIndex);
   });
+  const currentLabel = String(activeIndex + 1).padStart(2, '0');
+  clipboard.dataset.currentService = currentLabel;
+  if (serviceCurrent) serviceCurrent.textContent = currentLabel;
+  serviceProgress.forEach((bar, index) => bar.classList.toggle('is-current', index === activeIndex));
 };
 
 if (clipboardSection && clipboard) {
@@ -58,7 +72,6 @@ if (clipboardSection && clipboard) {
   window.addEventListener('scroll', syncClipboardMotion, { passive: true });
   window.addEventListener('resize', syncClipboardMotion);
   reducedMotion.addEventListener?.('change', syncClipboardMotion);
-  compactClipboard.addEventListener?.('change', syncClipboardMotion);
 }
 
 const closeMenu = () => {

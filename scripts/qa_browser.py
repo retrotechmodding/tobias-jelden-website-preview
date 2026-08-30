@@ -166,35 +166,37 @@ def main():
 
             clipboard_expression = """(async () => {
               const section = document.querySelector('[data-clipboard-section]');
+              const track = section?.querySelector('.clipboard-track');
               const board = document.querySelector('[data-clipboard]');
               const items = [...document.querySelectorAll('[data-clipboard-item]')];
-              if (!section || !board || items.length !== 4) return JSON.stringify({missing: true});
-              const wait = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-              const distance = Math.max(1, section.offsetHeight - innerHeight);
+              if (!section || !track || !board || items.length !== 4) return JSON.stringify({missing: true});
+              const wait = () => new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve, 160)));
+              const distance = Math.max(1, track.offsetHeight - innerHeight);
+              const trackTop = track.getBoundingClientRect().top + scrollY;
               document.documentElement.style.scrollBehavior = 'auto';
               const states = [];
-              if (innerWidth > 1100) {
-                for (const progress of [0.02, 0.28, 0.53, 0.78]) {
-                  const target = section.offsetTop + distance * progress;
-                  window.scrollTo(0, target);
-                  window.dispatchEvent(new Event('scroll'));
-                  await wait();
-                  states.push({
-                    progress,
-                    target: Math.round(target),
-                    scrollY: Math.round(window.scrollY),
-                    sectionTop: Math.round(section.offsetTop),
-                    rectTop: Math.round(section.getBoundingClientRect().top),
-                    rotation: board.style.getPropertyValue('--clipboard-rotate').trim(),
-                    active: items.findIndex(item => item.classList.contains('is-active')),
-                    checked: items.filter(item => item.classList.contains('is-checked')).length
-                  });
-                }
-                window.scrollTo(0, section.offsetTop + distance * 0.78);
+              for (const progress of [0.07, 0.35, 0.64, 0.93]) {
+                const target = trackTop + distance * progress;
+                window.scrollTo(0, target);
                 dispatchEvent(new Event('scroll'));
-              } else {
-                scrollTo(0, section.offsetTop - 18);
+                await wait();
+                const active = items.findIndex(item => item.classList.contains('is-active'));
+                states.push({
+                  progress,
+                  target: Math.round(target),
+                  scrollY: Math.round(window.scrollY),
+                  trackTop: Math.round(trackTop),
+                  rectTop: Math.round(track.getBoundingClientRect().top),
+                  active,
+                  checked: items.filter(item => item.classList.contains('is-checked')).length,
+                  current: board.dataset.currentService,
+                  activeOffset: active >= 0 ? items[active].style.getPropertyValue('--service-offset').trim() : null,
+                  activeOpacity: active >= 0 ? Number(getComputedStyle(items[active]).opacity) : null,
+                  visible: items.filter(item => Number(getComputedStyle(item).opacity) > 0.1).length
+                });
               }
+              window.scrollTo(0, trackTop + distance * 0.5);
+              dispatchEvent(new Event('scroll'));
               await wait();
               return JSON.stringify({
                 missing: false,
@@ -248,15 +250,18 @@ def main():
             raise SystemExit("interaction failure")
         if any(r["clipboardMotion"].get("missing") or r["clipboardMotion"].get("itemCount") != 4 for r in results.values()):
             raise SystemExit("clipboard structure failure")
-        desktop_states = results["desktop"]["clipboardMotion"]["states"]
-        if [state["active"] for state in desktop_states] != [0, 1, 2, 3]:
-            raise SystemExit(f"clipboard active-item progression failure: {json.dumps(desktop_states, ensure_ascii=False)}")
-        if [state["checked"] for state in desktop_states] != [1, 2, 3, 4]:
-            raise SystemExit(f"clipboard check progression failure: {json.dumps(desktop_states, ensure_ascii=False)}")
-        if len({state["rotation"] for state in desktop_states}) != 4:
-            raise SystemExit("clipboard rotation failure")
-        if results["mobile"]["clipboardMotion"]["active"] != -1 or results["mobile"]["clipboardMotion"]["checked"] != 4:
-            raise SystemExit("clipboard mobile fallback failure")
+        for viewport in ("desktop", "mobile"):
+            states = results[viewport]["clipboardMotion"]["states"]
+            if [state["active"] for state in states] != [0, 1, 2, 3]:
+                raise SystemExit(f"clipboard service progression failure ({viewport}): {json.dumps(states, ensure_ascii=False)}")
+            if [state["checked"] for state in states] != [1, 2, 3, 4]:
+                raise SystemExit(f"clipboard check progression failure ({viewport}): {json.dumps(states, ensure_ascii=False)}")
+            if [state["current"] for state in states] != ["01", "02", "03", "04"]:
+                raise SystemExit(f"clipboard counter progression failure ({viewport}): {json.dumps(states, ensure_ascii=False)}")
+            if any(state["activeOpacity"] < 0.95 or abs(float(state["activeOffset"])) > 0.04 for state in states):
+                raise SystemExit(f"clipboard active service visibility failure ({viewport}): {json.dumps(states, ensure_ascii=False)}")
+            if results[viewport]["clipboardMotion"]["boardTransform"] != "none":
+                raise SystemExit(f"clipboard brand frame should remain stable ({viewport})")
 
         call(
             "Emulation.setEmulatedMedia",
