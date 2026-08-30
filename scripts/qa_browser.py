@@ -84,6 +84,7 @@ def main():
         results = {}
         for label, width, height, mobile, scale_factor in [
             ("desktop", 1440, 1100, False, 1),
+            ("compact", 1180, 707, False, 1),
             ("mobile", 390, 844, True, 1),
         ]:
             call(
@@ -114,6 +115,13 @@ def main():
                 text: (el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 70)
               })).filter(x => x.right > window.innerWidth + 1 || x.left < -1).slice(0, 25),
               h1: document.querySelectorAll('h1').length,
+              heroTypography: (() => {
+                const heading = document.querySelector('.hero h1');
+                const style = getComputedStyle(heading);
+                const fontSize = Number.parseFloat(style.fontSize);
+                const lineHeight = Number.parseFloat(style.lineHeight);
+                return {fontSize, lineHeight, ratio: lineHeight / fontSize};
+              })(),
               robots: document.querySelector('meta[name=robots]')?.content,
               menuDisplay: getComputedStyle(document.querySelector('[data-menu-toggle]')).display,
               failedImages: [...document.images].filter(i => !i.complete || i.naturalWidth === 0).map(i => i.src),
@@ -244,6 +252,8 @@ def main():
             raise SystemExit("failed images")
         if any(r["title"] != "Prüfsachverständiger Elektrotechnik | Jelden" for r in results.values()):
             raise SystemExit("final page title mismatch")
+        if any(r["heroTypography"]["ratio"] < 0.85 for r in results.values()):
+            raise SystemExit("hero line-height clips uppercase umlauts")
         if any(r["robots"] != "noindex,nofollow,noarchive" for r in results.values()):
             raise SystemExit("preview indexing guard mismatch")
         if any(r["mailto"] != 2 or r["tel"] != 2 for r in results.values()):
