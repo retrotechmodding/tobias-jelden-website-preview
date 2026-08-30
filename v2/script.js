@@ -2,37 +2,26 @@ const menuButton = document.querySelector('[data-menu-toggle]');
 const nav = document.querySelector('[data-nav]');
 const heroVideos = [...document.querySelectorAll('[data-hero-video]')];
 const heroVideoControl = document.querySelector('[data-hero-video-control]');
-const heroMedia = document.querySelector('.hero-media');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-let heroVideoUserStarted = false;
 
 const setHeroVideoFallback = (visible) => {
   if (heroVideoControl) heroVideoControl.hidden = !visible;
 };
 
 const syncHeroMotion = () => {
-  let needsFallback = false;
   heroVideos.forEach((video) => {
     video.muted = true;
     if (document.hidden) {
       video.pause();
       return;
     }
-    if (reducedMotion.matches && !heroVideoUserStarted) {
-      video.pause();
-      needsFallback = true;
-      return;
-    }
     video.play()
       .then(() => setHeroVideoFallback(false))
       .catch(() => setHeroVideoFallback(true));
   });
-  if (needsFallback) setHeroVideoFallback(true);
 };
 
 heroVideoControl?.addEventListener('click', async () => {
-  heroVideoUserStarted = true;
-  heroMedia?.classList.add('is-user-started');
   const attempts = await Promise.allSettled(heroVideos.map((video) => {
     video.muted = true;
     return video.play();
@@ -43,11 +32,12 @@ heroVideoControl?.addEventListener('click', async () => {
 heroVideos.forEach((video) => {
   video.addEventListener('playing', () => setHeroVideoFallback(false));
   video.addEventListener('error', () => setHeroVideoFallback(true));
+  video.addEventListener('loadeddata', syncHeroMotion);
 });
 
 syncHeroMotion();
-reducedMotion.addEventListener?.('change', syncHeroMotion);
 document.addEventListener('visibilitychange', syncHeroMotion);
+window.addEventListener('pageshow', syncHeroMotion);
 
 const clipboardSection = document.querySelector('[data-clipboard-section]');
 const clipboard = document.querySelector('[data-clipboard]');

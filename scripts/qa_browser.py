@@ -131,6 +131,7 @@ def main():
                 paused: v.paused,
                 muted: v.muted,
                 playsInline: v.playsInline,
+                loop: v.loop,
                 preload: v.preload,
                 error: v.error ? {code: v.error.code, message: v.error.message} : null,
                 currentTime: v.currentTime,
@@ -170,11 +171,29 @@ def main():
             )["result"]["value"]
             metrics["heroVideoProgress"] = current_video_time - metrics["heroVideos"][0]["currentTime"]
             if label == "mobile":
+                menu_open_expression = """(() => {
+                  const menu = document.querySelector('[data-menu-toggle]');
+                  const nav = document.querySelector('[data-nav]');
+                  const header = document.querySelector('.site-header');
+                  menu.click();
+                  const menuOpen = menu.getAttribute('aria-expanded') === 'true' && nav.classList.contains('is-open') && document.body.classList.contains('menu-open');
+                  const navRect = nav.getBoundingClientRect();
+                  return JSON.stringify({
+                    menuOpen,
+                    menuBackground: getComputedStyle(nav).backgroundColor,
+                    menuOpacity: getComputedStyle(nav).opacity,
+                    toggleBackground: getComputedStyle(menu).backgroundColor,
+                    headerBackground: getComputedStyle(header).backgroundColor,
+                    navBounds: {left: navRect.left, right: navRect.right, top: navRect.top, bottom: navRect.bottom}
+                  });
+                })()"""
+                metrics["interactions"] = json.loads(call("Runtime.evaluate", expression=menu_open_expression, returnByValue=True)["result"]["value"])
+                menu_shot = call("Page.captureScreenshot", format="png", captureBeyondViewport=False, fromSurface=True)
+                OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+                (OUTPUT_DIR / f"{OUTPUT_PREFIX}-{label}-menu-open.png").write_bytes(base64.b64decode(menu_shot["data"]))
                 interaction_expression = """(() => {
                   const menu = document.querySelector('[data-menu-toggle]');
                   const nav = document.querySelector('[data-nav]');
-                  menu.click();
-                  const menuOpen = menu.getAttribute('aria-expanded') === 'true' && nav.classList.contains('is-open') && document.body.classList.contains('menu-open');
                   menu.click();
                   const menuClosed = menu.getAttribute('aria-expanded') === 'false' && !nav.classList.contains('is-open');
                   const faq = [...document.querySelectorAll('[data-accordion] button')][1];
@@ -183,9 +202,9 @@ def main():
                   document.querySelector('[data-legal=\"impressum\"]').click();
                   const legalOpen = document.querySelector('[data-legal-dialog]').open === true;
                   document.querySelector('[data-legal-close]').click();
-                  return JSON.stringify({menuOpen, menuClosed, faqOpen, legalOpen});
+                  return JSON.stringify({menuClosed, faqOpen, legalOpen});
                 })()"""
-                metrics["interactions"] = json.loads(call("Runtime.evaluate", expression=interaction_expression, returnByValue=True)["result"]["value"])
+                metrics["interactions"].update(json.loads(call("Runtime.evaluate", expression=interaction_expression, returnByValue=True)["result"]["value"]))
             shot = call("Page.captureScreenshot", format="png", captureBeyondViewport=False, fromSurface=True)
             OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
             (OUTPUT_DIR / f"{OUTPUT_PREFIX}-{label}.png").write_bytes(base64.b64decode(shot["data"]))
@@ -363,6 +382,8 @@ def main():
             raise SystemExit("hero video loading error")
         if any(not v["muted"] or not v["playsInline"] for r in results.values() for v in r["heroVideos"]):
             raise SystemExit("hero video autoplay safety attributes missing")
+        if any(not v["loop"] for r in results.values() for v in r["heroVideos"]):
+            raise SystemExit("hero video loop attribute missing")
         if any(v["readyState"] < 2 or v["paused"] for r in results.values() for v in r["heroVideos"]):
             raise SystemExit("hero video autoplay did not start")
         if any(r["heroVideoProgress"] < 0.2 for r in results.values()):
@@ -375,6 +396,22 @@ def main():
             raise SystemExit("hero video manual fallback control mismatch")
         if not all(results["mobile"]["interactions"].values()):
             raise SystemExit("interaction failure")
+        menu_colors = results["mobile"]["interactions"]
+        if any(
+            menu_colors[key] != "rgb(6, 59, 77)"
+            for key in ("menuBackground", "toggleBackground", "headerBackground")
+        ):
+            raise SystemExit(f"mobile menu transparency failure: {json.dumps(menu_colors, ensure_ascii=False)}")
+        if menu_colors["menuOpacity"] != "1":
+            raise SystemExit(f"mobile menu opacity transition failure: {json.dumps(menu_colors, ensure_ascii=False)}")
+        nav_bounds = menu_colors["navBounds"]
+        if (
+            nav_bounds["left"] > 1
+            or nav_bounds["right"] < results["mobile"]["innerWidth"] - 1
+            or nav_bounds["top"] > 75
+            or nav_bounds["bottom"] < results["mobile"]["innerHeight"] - 1
+        ):
+            raise SystemExit(f"mobile menu does not cover viewport: {json.dumps(nav_bounds, ensure_ascii=False)}")
         if any(r["clipboardMotion"].get("missing") or r["clipboardMotion"].get("itemCount") != 4 for r in results.values()):
             raise SystemExit("clipboard structure failure")
         for viewport in ("desktop", "mobile"):
@@ -409,6 +446,7 @@ def main():
                   matches: matchMedia('(prefers-reduced-motion: reduce)').matches,
                   videos: [...document.querySelectorAll('[data-hero-video]')].map(v => ({
                     paused: v.paused,
+                    currentTime: v.currentTime,
                     display: getComputedStyle(v).display
                   })),
                   videoControl: (() => {
@@ -432,60 +470,21 @@ def main():
             )["result"]["value"]
         )
         results["reducedMotion"] = reduced_motion
-        if not reduced_motion["matches"] or any(v["display"] != "none" or not v["paused"] for v in reduced_motion["videos"]):
-            raise SystemExit("reduced motion fallback failure")
-        if not reduced_motion["videoControl"]["exists"] or reduced_motion["videoControl"]["display"] == "none":
-            raise SystemExit("reduced motion manual video control failure")
-        reduced_fallback_shot = call("Page.captureScreenshot", format="png", captureBeyondViewport=False, fromSurface=True)
-        (OUTPUT_DIR / f"{OUTPUT_PREFIX}-reduced-motion-fallback.png").write_bytes(base64.b64decode(reduced_fallback_shot["data"]))
-        control_box = call(
-            "Runtime.evaluate",
-            expression="""(() => {
-              const rect = document.querySelector('[data-hero-video-control]').getBoundingClientRect();
-              return {x: rect.left + rect.width / 2, y: rect.top + rect.height / 2};
-            })()""",
-            returnByValue=True,
-        )["result"]["value"]
-        for event_type, button_state in (("mousePressed", 1), ("mouseReleased", 0)):
-            call(
-                "Input.dispatchMouseEvent",
-                type=event_type,
-                x=control_box["x"],
-                y=control_box["y"],
-                button="left",
-                buttons=button_state,
-                clickCount=1,
-            )
-        time.sleep(0.4)
-        manual_start = call(
+        time.sleep(0.5)
+        reduced_video_time = call(
             "Runtime.evaluate",
             expression="document.querySelector('[data-hero-video]').currentTime",
             returnByValue=True,
         )["result"]["value"]
-        time.sleep(0.5)
-        manual_playback = call(
-            "Runtime.evaluate",
-            expression="""(() => {
-              const video = document.querySelector('[data-hero-video]');
-              const control = document.querySelector('[data-hero-video-control]');
-              return {
-                currentTime: video.currentTime,
-                paused: video.paused,
-                display: getComputedStyle(video).display,
-                controlDisplay: getComputedStyle(control).display
-              };
-            })()""",
-            returnByValue=True,
-        )["result"]["value"]
-        manual_playback["startTime"] = manual_start
-        reduced_motion["manualPlayback"] = manual_playback
-        if (
-            manual_playback["paused"]
-            or manual_playback["display"] == "none"
-            or manual_playback["controlDisplay"] != "none"
-            or manual_playback["currentTime"] - manual_playback["startTime"] < 0.25
-        ):
-            raise SystemExit(f"manual hero video playback failure: {json.dumps(manual_playback, ensure_ascii=False)}")
+        reduced_motion["videoProgress"] = reduced_video_time - reduced_motion["videos"][0]["currentTime"]
+        if not reduced_motion["matches"]:
+            raise SystemExit("reduced motion emulation failure")
+        if any(v["display"] == "none" or v["paused"] for v in reduced_motion["videos"]):
+            raise SystemExit("hero video does not autoplay with reduced motion")
+        if reduced_motion["videoProgress"] < 0.25:
+            raise SystemExit("hero video does not progress with reduced motion")
+        if not reduced_motion["videoControl"]["exists"] or reduced_motion["videoControl"]["display"] != "none":
+            raise SystemExit("hero video fallback control should remain hidden during autoplay")
         if reduced_motion["clipboard"]["transform"] != "none" or reduced_motion["clipboard"]["active"] != -1 or reduced_motion["clipboard"]["checked"] != 4:
             raise SystemExit("clipboard reduced motion fallback failure")
         reduced_shot = call("Page.captureScreenshot", format="png", captureBeyondViewport=False, fromSurface=True)

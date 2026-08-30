@@ -50,7 +50,7 @@
   .main-nav a{text-decoration:none;font-size:.78rem;font-weight:650;letter-spacing:.05em}
   .main-nav a:not(.nav-cta):hover{color:#fff}
   .nav-cta{padding:11px 16px;border:1px solid rgba(255,255,255,.55);color:#fff}
-  .menu-toggle{display:none;width:48px;height:48px;background:transparent;border:1px solid rgba(255,255,255,.3);color:#fff;padding:13px}
+  .menu-toggle{display:none;width:48px;height:48px;background:var(--deep);border:1px solid rgba(255,255,255,.45);color:#fff;padding:13px}
   .menu-toggle span{display:block;width:100%;height:1px;background:currentColor;margin:6px 0;transition:transform .2s}
   .menu-toggle[aria-expanded="true"] span:first-child{transform:translateY(3.5px) rotate(45deg)}
   .menu-toggle[aria-expanded="true"] span:last-child{transform:translateY(-3.5px) rotate(-45deg)}
@@ -210,8 +210,9 @@
 @layer responsive{
   @media(max-width:1100px){
     .menu-toggle{display:block;position:relative;z-index:102}
-    .main-nav{position:fixed;z-index:101;inset:var(--header-h) 0 0;background:var(--deep);padding:40px var(--gutter);flex-direction:column;align-items:stretch;gap:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .2s}
+    .main-nav{position:fixed;z-index:101;inset:var(--header-h) 0 0;background:var(--deep);padding:40px var(--gutter);flex-direction:column;align-items:stretch;gap:0;opacity:0;visibility:hidden;pointer-events:none;transition:none}
     .main-nav.is-open{opacity:1;visibility:visible;pointer-events:auto}
+    body.menu-open .site-header{background:var(--deep);backdrop-filter:none}
     .main-nav a{font-size:1.35rem;padding:20px 0;border-bottom:1px solid rgba(255,255,255,.2)}
     .nav-cta{margin-top:20px;text-align:center;border:1px solid rgba(255,255,255,.5)!important}
     body.menu-open{overflow:hidden}
@@ -255,9 +256,6 @@
 
   @media(prefers-reduced-motion:reduce){
     *{scroll-behavior:auto!important;transition:none!important}
-    .hero-media{background:linear-gradient(rgba(4,46,62,.74),rgba(4,46,62,.74)),url('../assets/video/hero-jelden-pruefanlagen.jpg?v=5') center/cover no-repeat}
-    .hero-video{display:none!important;animation:none!important}
-    .hero-media.is-user-started .hero-video{display:block!important}
     .services{min-height:auto!important;padding-bottom:90px!important}
     .clipboard-track{min-height:auto!important}
     .clipboard-stage{position:static!important;min-height:auto!important;padding-block:50px!important}
