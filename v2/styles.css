@@ -87,6 +87,8 @@
   .hero-media::after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(90deg,rgba(4,46,62,.72) 0%,rgba(4,46,62,.48) 48%,rgba(4,46,62,.68) 100%)}
   .hero-video{position:absolute;inset:-3%;width:106%;height:106%;object-fit:cover;pointer-events:none;filter:grayscale(1) saturate(.22) contrast(1.12);opacity:1}
   .hero-video-pruefanlagen{object-position:center center}
+  .hero-video-control{position:absolute;top:calc(var(--header-h) + 18px);right:var(--gutter);z-index:4;min-height:42px;padding:0 18px;border:1px solid rgba(255,255,255,.58);background:rgba(4,46,62,.72);color:#fff;font:600 .72rem/1 var(--font);letter-spacing:.1em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(8px)}
+  .hero-video-control[hidden]{display:none}
   .hero-content{align-self:center;min-width:0;width:100%;max-width:1120px;padding-bottom:40px}
   .kicker{color:#b9d9e2;margin-bottom:30px}
   .hero h1{font-size:clamp(4.2rem,6.6vw,8.6rem);line-height:.96;letter-spacing:-.07em;font-weight:520;white-space:nowrap}
@@ -188,7 +190,7 @@
 
   .contact{position:relative;min-height:850px;padding:clamp(90px,11vw,160px) var(--gutter);background:var(--deep);color:#fff;overflow:hidden;isolation:isolate;display:flex;flex-direction:column}
 
-  .contact-mark{position:absolute;left:54%;right:auto;top:50%;transform:translate(-50%,-50%);width:min(54vw,800px);opacity:.055;z-index:-1}
+  .contact-mark{position:absolute;left:57%;right:auto;top:50%;transform:translate(-50%,-50%);width:min(54vw,800px);opacity:.055;z-index:-1}
   .contact-mark img{width:100%;height:auto}
   .contact .section-code{color:var(--cyan)}
   .contact h2{font-size:clamp(4.2rem,8.2vw,10rem);margin:50px 0 70px}
@@ -228,6 +230,7 @@
   }
   @media(max-width:720px){
     :root{--header-h:74px;--gutter:22px}
+    .hero-video-control{top:calc(var(--header-h) + 10px);min-height:34px;padding-inline:12px;font-size:.62rem;letter-spacing:.08em}
     .brand{width:205px;height:52px}
     .hero{min-height:auto;padding-top:calc(var(--header-h) + 52px);grid-template-columns:1fr;grid-template-rows:auto auto auto;gap:24px}
     .hero-media{opacity:.2}
@@ -246,7 +249,7 @@
     .territory{min-height:auto;padding-block:90px;gap:65px}.territory-map{top:55%;right:-10vw;width:82vw;opacity:.72}.territory-data>div{grid-template-columns:100px 1fr}
     .partners{padding-block:90px}.partner-list{grid-template-columns:1fr;margin-top:55px}.partner-card{min-height:275px;padding:24px;border-right:0;border-bottom:1px solid var(--light-line)}.partner-card:last-child{border-bottom:0}.partner-logo{height:155px;padding:20px}.partner-logo-strathmann img{width:min(72%,220px);height:72%}.partner-logo-ipo img{max-height:125px}.partner-meta{align-items:start}.partner-meta strong{font-size:1.05rem}.partner-meta small{max-width:135px;font-size:.58rem}
     .faq-section{padding-block:90px;gap:55px}
-    .contact{min-height:760px;padding-block:90px}.contact h2{font-size:clamp(3.8rem,17vw,6rem);margin-block:40px 60px}.contact-actions{flex-direction:column}.contact-actions .button{width:100%;text-transform:none;letter-spacing:0}.contact-mark{left:55%;right:auto;top:52%;width:108vw;transform:translate(-50%,-50%)}
+    .contact{min-height:760px;padding-block:90px}.contact h2{font-size:clamp(3.8rem,17vw,6rem);margin-block:40px 60px}.contact-actions{flex-direction:column}.contact-actions .button{width:100%;text-transform:none;letter-spacing:0}.contact-mark{left:58%;right:auto;top:52%;width:108vw;transform:translate(-50%,-50%)}
     .site-footer{grid-template-columns:1fr;padding-block:45px}.footer-links{justify-content:flex-start;flex-wrap:wrap}.site-footer>p{grid-column:1}
   }
 
@@ -254,6 +257,7 @@
     *{scroll-behavior:auto!important;transition:none!important}
     .hero-media{background:linear-gradient(rgba(4,46,62,.74),rgba(4,46,62,.74)),url('../assets/video/hero-jelden-pruefanlagen.jpg?v=5') center/cover no-repeat}
     .hero-video{display:none!important;animation:none!important}
+    .hero-media.is-user-started .hero-video{display:block!important}
     .services{min-height:auto!important;padding-bottom:90px!important}
     .clipboard-track{min-height:auto!important}
     .clipboard-stage{position:static!important;min-height:auto!important;padding-block:50px!important}

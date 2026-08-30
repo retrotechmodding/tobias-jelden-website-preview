@@ -131,9 +131,19 @@ def main():
                 paused: v.paused,
                 muted: v.muted,
                 playsInline: v.playsInline,
+                preload: v.preload,
                 error: v.error ? {code: v.error.code, message: v.error.message} : null,
+                currentTime: v.currentTime,
                 display: getComputedStyle(v).display
               })),
+              heroVideoSourceTypes: [...document.querySelectorAll('[data-hero-video] source')].map(source => source.type),
+              heroVideoControl: (() => {
+                const control = document.querySelector('[data-hero-video-control]');
+                return {
+                  exists: Boolean(control),
+                  display: control ? getComputedStyle(control).display : null
+                };
+              })(),
               mailto: document.querySelectorAll('a[href^=\"mailto:\"]').length,
               tel: document.querySelectorAll('a[href^=\"tel:\"]').length,
               telHrefs: [...document.querySelectorAll('a[href^=\"tel:\"]')].map(a => a.getAttribute('href')),
@@ -152,6 +162,13 @@ def main():
               previewLanguage: /Designvariante|Variante 1/.test(document.body.innerText)
             })"""
             metrics = json.loads(call("Runtime.evaluate", expression=expression, returnByValue=True)["result"]["value"])
+            time.sleep(0.35)
+            current_video_time = call(
+                "Runtime.evaluate",
+                expression="document.querySelector('[data-hero-video]').currentTime",
+                returnByValue=True,
+            )["result"]["value"]
+            metrics["heroVideoProgress"] = current_video_time - metrics["heroVideos"][0]["currentTime"]
             if label == "mobile":
                 interaction_expression = """(() => {
                   const menu = document.querySelector('[data-menu-toggle]');
@@ -322,7 +339,7 @@ def main():
         if any(r["failedImages"] for r in results.values()):
             raise SystemExit("failed images")
         if any(
-            not 0.035 <= (r["contactMark"]["center"] / r["innerWidth"] - 0.5) <= 0.055
+            not 0.065 <= (r["contactMark"]["center"] / r["innerWidth"] - 0.5) <= 0.085
             for r in results.values()
         ):
             raise SystemExit("contact background mark right offset is outside target range")
@@ -348,6 +365,14 @@ def main():
             raise SystemExit("hero video autoplay safety attributes missing")
         if any(v["readyState"] < 2 or v["paused"] for r in results.values() for v in r["heroVideos"]):
             raise SystemExit("hero video autoplay did not start")
+        if any(r["heroVideoProgress"] < 0.2 for r in results.values()):
+            raise SystemExit("hero video frames are not progressing")
+        if any(r["heroVideoSourceTypes"][:2] != ["video/mp4", "video/webm"] for r in results.values()):
+            raise SystemExit("hero video source compatibility order mismatch")
+        if any(v["preload"] != "auto" for r in results.values() for v in r["heroVideos"]):
+            raise SystemExit("hero video preload policy mismatch")
+        if any(not r["heroVideoControl"]["exists"] or r["heroVideoControl"]["display"] != "none" for r in results.values()):
+            raise SystemExit("hero video manual fallback control mismatch")
         if not all(results["mobile"]["interactions"].values()):
             raise SystemExit("interaction failure")
         if any(r["clipboardMotion"].get("missing") or r["clipboardMotion"].get("itemCount") != 4 for r in results.values()):
@@ -386,6 +411,13 @@ def main():
                     paused: v.paused,
                     display: getComputedStyle(v).display
                   })),
+                  videoControl: (() => {
+                    const control = document.querySelector('[data-hero-video-control]');
+                    return {
+                      exists: Boolean(control),
+                      display: control ? getComputedStyle(control).display : null
+                    };
+                  })(),
                   clipboard: (() => {
                     const board = document.querySelector('[data-clipboard]');
                     const items = [...document.querySelectorAll('[data-clipboard-item]')];
@@ -402,6 +434,58 @@ def main():
         results["reducedMotion"] = reduced_motion
         if not reduced_motion["matches"] or any(v["display"] != "none" or not v["paused"] for v in reduced_motion["videos"]):
             raise SystemExit("reduced motion fallback failure")
+        if not reduced_motion["videoControl"]["exists"] or reduced_motion["videoControl"]["display"] == "none":
+            raise SystemExit("reduced motion manual video control failure")
+        reduced_fallback_shot = call("Page.captureScreenshot", format="png", captureBeyondViewport=False, fromSurface=True)
+        (OUTPUT_DIR / f"{OUTPUT_PREFIX}-reduced-motion-fallback.png").write_bytes(base64.b64decode(reduced_fallback_shot["data"]))
+        control_box = call(
+            "Runtime.evaluate",
+            expression="""(() => {
+              const rect = document.querySelector('[data-hero-video-control]').getBoundingClientRect();
+              return {x: rect.left + rect.width / 2, y: rect.top + rect.height / 2};
+            })()""",
+            returnByValue=True,
+        )["result"]["value"]
+        for event_type, button_state in (("mousePressed", 1), ("mouseReleased", 0)):
+            call(
+                "Input.dispatchMouseEvent",
+                type=event_type,
+                x=control_box["x"],
+                y=control_box["y"],
+                button="left",
+                buttons=button_state,
+                clickCount=1,
+            )
+        time.sleep(0.4)
+        manual_start = call(
+            "Runtime.evaluate",
+            expression="document.querySelector('[data-hero-video]').currentTime",
+            returnByValue=True,
+        )["result"]["value"]
+        time.sleep(0.5)
+        manual_playback = call(
+            "Runtime.evaluate",
+            expression="""(() => {
+              const video = document.querySelector('[data-hero-video]');
+              const control = document.querySelector('[data-hero-video-control]');
+              return {
+                currentTime: video.currentTime,
+                paused: video.paused,
+                display: getComputedStyle(video).display,
+                controlDisplay: getComputedStyle(control).display
+              };
+            })()""",
+            returnByValue=True,
+        )["result"]["value"]
+        manual_playback["startTime"] = manual_start
+        reduced_motion["manualPlayback"] = manual_playback
+        if (
+            manual_playback["paused"]
+            or manual_playback["display"] == "none"
+            or manual_playback["controlDisplay"] != "none"
+            or manual_playback["currentTime"] - manual_playback["startTime"] < 0.25
+        ):
+            raise SystemExit(f"manual hero video playback failure: {json.dumps(manual_playback, ensure_ascii=False)}")
         if reduced_motion["clipboard"]["transform"] != "none" or reduced_motion["clipboard"]["active"] != -1 or reduced_motion["clipboard"]["checked"] != 4:
             raise SystemExit("clipboard reduced motion fallback failure")
         reduced_shot = call("Page.captureScreenshot", format="png", captureBeyondViewport=False, fromSurface=True)
