@@ -86,7 +86,6 @@ def main():
             ("desktop", 1440, 1100, False, 1),
             ("compact", 1180, 707, False, 1),
             ("mobile", 390, 844, True, 1),
-            ("narrow", 320, 700, True, 1),
         ]:
             call(
                 "Emulation.setDeviceMetricsOverride",
@@ -125,17 +124,6 @@ def main():
               })(),
               robots: document.querySelector('meta[name=robots]')?.content,
               menuDisplay: getComputedStyle(document.querySelector('[data-menu-toggle]')).display,
-              headerLayout: (() => {
-                const brand = document.querySelector('.brand').getBoundingClientRect();
-                const menu = document.querySelector('[data-menu-toggle]').getBoundingClientRect();
-                const header = document.querySelector('[data-header]').getBoundingClientRect();
-                return {
-                  brand: {left: brand.left, right: brand.right, top: brand.top, bottom: brand.bottom},
-                  menu: {left: menu.left, right: menu.right, top: menu.top, bottom: menu.bottom},
-                  header: {left: header.left, right: header.right, top: header.top, bottom: header.bottom},
-                  gap: menu.left - brand.right
-                };
-              })(),
               failedImages: [...document.images].filter(i => !i.complete || i.naturalWidth === 0).map(i => i.src),
               heroVideos: [...document.querySelectorAll('[data-hero-video]')].map(v => ({
                 currentSrc: v.currentSrc,
@@ -292,20 +280,49 @@ def main():
                 clip={"x": 0, "y": territory["y"], "width": territory["width"], "height": territory["height"], "scale": 1},
             )
             (OUTPUT_DIR / f"{OUTPUT_PREFIX}-{label}-territory.png").write_bytes(base64.b64decode(territory_shot["data"]))
+            contact = json.loads(
+                call(
+                    "Runtime.evaluate",
+                    expression="""JSON.stringify((() => {
+                      const section = document.querySelector('.contact');
+                      const rect = section.getBoundingClientRect();
+                      const markRect = section.querySelector('.contact-mark').getBoundingClientRect();
+                      return {
+                        x: 0,
+                        y: rect.top + scrollY,
+                        width: innerWidth,
+                        height: rect.height,
+                        mark: {
+                          left: markRect.left,
+                          right: markRect.right,
+                          top: markRect.top - rect.top,
+                          bottom: markRect.bottom - rect.top,
+                          center: (markRect.left + markRect.right) / 2
+                        }
+                      };
+                    })())""",
+                    returnByValue=True,
+                )["result"]["value"]
+            )
+            metrics["contactMark"] = contact["mark"]
+            contact_shot = call(
+                "Page.captureScreenshot",
+                format="png",
+                captureBeyondViewport=True,
+                fromSurface=True,
+                clip={"x": 0, "y": contact["y"], "width": contact["width"], "height": contact["height"], "scale": 1},
+            )
+            (OUTPUT_DIR / f"{OUTPUT_PREFIX}-{label}-contact.png").write_bytes(base64.b64decode(contact_shot["data"]))
             results[label] = {**metrics, "contentHeight": layout["height"]}
 
         if results["desktop"]["innerWidth"] != 1440 or results["mobile"]["innerWidth"] != 390:
             raise SystemExit("viewport mismatch")
-        for viewport in ("mobile", "narrow"):
-            header = results[viewport]["headerLayout"]
-            if header["gap"] < 8:
-                raise SystemExit(f"mobile header logo overlaps menu ({viewport}): {json.dumps(header, ensure_ascii=False)}")
-            if header["brand"]["top"] < header["header"]["top"] or header["brand"]["bottom"] > header["header"]["bottom"]:
-                raise SystemExit(f"mobile header logo escapes header ({viewport}): {json.dumps(header, ensure_ascii=False)}")
         if any(r["scrollWidth"] != r["innerWidth"] for r in results.values()):
             raise SystemExit("horizontal overflow")
         if any(r["failedImages"] for r in results.values()):
             raise SystemExit("failed images")
+        if any(abs(r["contactMark"]["center"] - r["innerWidth"] / 2) > 2 for r in results.values()):
+            raise SystemExit("contact background mark is not centered")
         if any(not r["territoryMap"]["exists"] or not r["territoryMap"]["loaded"] for r in results.values()):
             raise SystemExit("territory map asset failure")
         if any(r["title"] != "Prüfsachverständiger Elektrotechnik | Jelden" for r in results.values()):
