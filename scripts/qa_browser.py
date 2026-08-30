@@ -86,6 +86,7 @@ def main():
             ("desktop", 1440, 1100, False, 1),
             ("compact", 1180, 707, False, 1),
             ("mobile", 390, 844, True, 1),
+            ("narrow", 320, 700, True, 1),
         ]:
             call(
                 "Emulation.setDeviceMetricsOverride",
@@ -124,6 +125,17 @@ def main():
               })(),
               robots: document.querySelector('meta[name=robots]')?.content,
               menuDisplay: getComputedStyle(document.querySelector('[data-menu-toggle]')).display,
+              headerLayout: (() => {
+                const brand = document.querySelector('.brand').getBoundingClientRect();
+                const menu = document.querySelector('[data-menu-toggle]').getBoundingClientRect();
+                const header = document.querySelector('[data-header]').getBoundingClientRect();
+                return {
+                  brand: {left: brand.left, right: brand.right, top: brand.top, bottom: brand.bottom},
+                  menu: {left: menu.left, right: menu.right, top: menu.top, bottom: menu.bottom},
+                  header: {left: header.left, right: header.right, top: header.top, bottom: header.bottom},
+                  gap: menu.left - brand.right
+                };
+              })(),
               failedImages: [...document.images].filter(i => !i.complete || i.naturalWidth === 0).map(i => i.src),
               heroVideos: [...document.querySelectorAll('[data-hero-video]')].map(v => ({
                 currentSrc: v.currentSrc,
@@ -284,6 +296,12 @@ def main():
 
         if results["desktop"]["innerWidth"] != 1440 or results["mobile"]["innerWidth"] != 390:
             raise SystemExit("viewport mismatch")
+        for viewport in ("mobile", "narrow"):
+            header = results[viewport]["headerLayout"]
+            if header["gap"] < 8:
+                raise SystemExit(f"mobile header logo overlaps menu ({viewport}): {json.dumps(header, ensure_ascii=False)}")
+            if header["brand"]["top"] < header["header"]["top"] or header["brand"]["bottom"] > header["header"]["bottom"]:
+                raise SystemExit(f"mobile header logo escapes header ({viewport}): {json.dumps(header, ensure_ascii=False)}")
         if any(r["scrollWidth"] != r["innerWidth"] for r in results.values()):
             raise SystemExit("horizontal overflow")
         if any(r["failedImages"] for r in results.values()):
