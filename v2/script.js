@@ -1,43 +1,38 @@
 const menuButton = document.querySelector('[data-menu-toggle]');
 const nav = document.querySelector('[data-nav]');
 const heroVideos = [...document.querySelectorAll('[data-hero-video]')];
-const heroVideoControl = document.querySelector('[data-hero-video-control]');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-const setHeroVideoFallback = (visible) => {
-  if (heroVideoControl) heroVideoControl.hidden = !visible;
-};
 
 const syncHeroMotion = () => {
   heroVideos.forEach((video) => {
     video.muted = true;
+    video.loop = true;
     if (document.hidden) {
       video.pause();
       return;
     }
-    video.play()
-      .then(() => setHeroVideoFallback(false))
-      .catch(() => setHeroVideoFallback(true));
+    video.play().catch(() => {
+      // In-App-Browser können Autoplay bis zur ersten Nutzerinteraktion sperren.
+    });
   });
 };
 
-heroVideoControl?.addEventListener('click', async () => {
-  const attempts = await Promise.allSettled(heroVideos.map((video) => {
-    video.muted = true;
-    return video.play();
-  }));
-  setHeroVideoFallback(attempts.some((attempt) => attempt.status === 'rejected'));
-});
-
 heroVideos.forEach((video) => {
-  video.addEventListener('playing', () => setHeroVideoFallback(false));
-  video.addEventListener('error', () => setHeroVideoFallback(true));
   video.addEventListener('loadeddata', syncHeroMotion);
+  video.addEventListener('canplay', syncHeroMotion);
+  video.addEventListener('ended', () => {
+    video.currentTime = 0;
+    syncHeroMotion();
+  });
 });
 
 syncHeroMotion();
 document.addEventListener('visibilitychange', syncHeroMotion);
 window.addEventListener('pageshow', syncHeroMotion);
+window.addEventListener('pointerdown', syncHeroMotion, { once: true, passive: true });
+window.addEventListener('touchstart', syncHeroMotion, { once: true, passive: true });
+window.addEventListener('keydown', syncHeroMotion, { once: true });
+window.addEventListener('scroll', syncHeroMotion, { once: true, passive: true });
 
 const clipboardSection = document.querySelector('[data-clipboard-section]');
 const clipboard = document.querySelector('[data-clipboard]');

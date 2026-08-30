@@ -392,8 +392,8 @@ def main():
             raise SystemExit("hero video source compatibility order mismatch")
         if any(v["preload"] != "auto" for r in results.values() for v in r["heroVideos"]):
             raise SystemExit("hero video preload policy mismatch")
-        if any(not r["heroVideoControl"]["exists"] or r["heroVideoControl"]["display"] != "none" for r in results.values()):
-            raise SystemExit("hero video manual fallback control mismatch")
+        if any(r["heroVideoControl"]["exists"] for r in results.values()):
+            raise SystemExit("hero video fallback control must not be rendered")
         if not all(results["mobile"]["interactions"].values()):
             raise SystemExit("interaction failure")
         menu_colors = results["mobile"]["interactions"]
@@ -431,6 +431,30 @@ def main():
             early, middle, end = results[viewport]["clipboardMotion"]["smoothSamples"]
             if not (0.05 < early < 2.5 and early < middle < end and end > 2.9):
                 raise SystemExit(f"clipboard temporal smoothing failure ({viewport}): {[early, middle, end]}")
+
+        call(
+            "Runtime.evaluate",
+            expression="""(async () => {
+              const video = document.querySelector('[data-hero-video]');
+              video.currentTime = Math.max(0, video.duration - 0.3);
+              await video.play();
+              return true;
+            })()""",
+            awaitPromise=True,
+            returnByValue=True,
+        )
+        time.sleep(0.8)
+        loop_boundary = call(
+            "Runtime.evaluate",
+            expression="""(() => {
+              const video = document.querySelector('[data-hero-video]');
+              return {currentTime: video.currentTime, duration: video.duration, paused: video.paused};
+            })()""",
+            returnByValue=True,
+        )["result"]["value"]
+        results["mobile"]["heroLoopBoundary"] = loop_boundary
+        if loop_boundary["paused"] or loop_boundary["currentTime"] >= 2:
+            raise SystemExit(f"hero video did not loop at media boundary: {json.dumps(loop_boundary, ensure_ascii=False)}")
 
         call(
             "Emulation.setEmulatedMedia",
@@ -483,8 +507,8 @@ def main():
             raise SystemExit("hero video does not autoplay with reduced motion")
         if reduced_motion["videoProgress"] < 0.25:
             raise SystemExit("hero video does not progress with reduced motion")
-        if not reduced_motion["videoControl"]["exists"] or reduced_motion["videoControl"]["display"] != "none":
-            raise SystemExit("hero video fallback control should remain hidden during autoplay")
+        if reduced_motion["videoControl"]["exists"]:
+            raise SystemExit("hero video fallback control must not be rendered with reduced motion")
         if reduced_motion["clipboard"]["transform"] != "none" or reduced_motion["clipboard"]["active"] != -1 or reduced_motion["clipboard"]["checked"] != 4:
             raise SystemExit("clipboard reduced motion fallback failure")
         reduced_shot = call("Page.captureScreenshot", format="png", captureBeyondViewport=False, fromSurface=True)
