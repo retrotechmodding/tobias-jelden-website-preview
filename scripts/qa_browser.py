@@ -322,7 +322,7 @@ def main():
         if any(r["failedImages"] for r in results.values()):
             raise SystemExit("failed images")
         if any(
-            not 0.02 <= (r["contactMark"]["center"] / r["innerWidth"] - 0.5) <= 0.045
+            not 0.035 <= (r["contactMark"]["center"] / r["innerWidth"] - 0.5) <= 0.055
             for r in results.values()
         ):
             raise SystemExit("contact background mark right offset is outside target range")
