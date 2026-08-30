@@ -20,6 +20,47 @@ syncHeroMotion();
 reducedMotion.addEventListener?.('change', syncHeroMotion);
 document.addEventListener('visibilitychange', syncHeroMotion);
 
+const clipboardSection = document.querySelector('[data-clipboard-section]');
+const clipboard = document.querySelector('[data-clipboard]');
+const clipboardItems = [...document.querySelectorAll('[data-clipboard-item]')];
+const compactClipboard = window.matchMedia('(max-width: 1100px)');
+
+const syncClipboardMotion = () => {
+  if (!clipboardSection || !clipboard || !clipboardItems.length) return;
+
+  if (reducedMotion.matches || compactClipboard.matches) {
+    clipboard.style.removeProperty('--clipboard-rotate');
+    clipboard.style.removeProperty('--clipboard-lift');
+    clipboardItems.forEach((item) => {
+      item.classList.remove('is-active');
+      item.classList.add('is-checked');
+    });
+    return;
+  }
+
+  const rect = clipboardSection.getBoundingClientRect();
+  const distance = Math.max(1, clipboardSection.offsetHeight - window.innerHeight);
+  const progress = Math.min(1, Math.max(0, -rect.top / distance));
+  const rotation = -2.4 + progress * 4.8 + Math.sin(progress * Math.PI * 4) * 0.45;
+  const lift = Math.sin(progress * Math.PI) * -10;
+  const activeIndex = Math.min(clipboardItems.length - 1, Math.floor(progress * clipboardItems.length));
+
+  clipboard.style.setProperty('--clipboard-rotate', `${rotation.toFixed(2)}deg`);
+  clipboard.style.setProperty('--clipboard-lift', `${lift.toFixed(1)}px`);
+  clipboardItems.forEach((item, index) => {
+    item.classList.toggle('is-active', index === activeIndex);
+    item.classList.toggle('is-checked', index <= activeIndex);
+  });
+};
+
+if (clipboardSection && clipboard) {
+  syncClipboardMotion();
+  window.addEventListener('scroll', syncClipboardMotion, { passive: true });
+  window.addEventListener('resize', syncClipboardMotion);
+  reducedMotion.addEventListener?.('change', syncClipboardMotion);
+  compactClipboard.addEventListener?.('change', syncClipboardMotion);
+}
+
 const closeMenu = () => {
   menuButton?.setAttribute('aria-expanded', 'false');
   menuButton?.setAttribute('aria-label', 'Menü öffnen');

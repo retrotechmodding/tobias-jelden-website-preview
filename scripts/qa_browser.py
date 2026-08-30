@@ -163,6 +163,61 @@ def main():
                 clip={"x": 0, "y": 0, "width": width, "height": layout["height"], "scale": 1},
             )
             (OUTPUT_DIR / f"{OUTPUT_PREFIX}-{label}-full.png").write_bytes(base64.b64decode(full["data"]))
+
+            clipboard_expression = """(async () => {
+              const section = document.querySelector('[data-clipboard-section]');
+              const board = document.querySelector('[data-clipboard]');
+              const items = [...document.querySelectorAll('[data-clipboard-item]')];
+              if (!section || !board || items.length !== 4) return JSON.stringify({missing: true});
+              const wait = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+              const distance = Math.max(1, section.offsetHeight - innerHeight);
+              document.documentElement.style.scrollBehavior = 'auto';
+              const states = [];
+              if (innerWidth > 1100) {
+                for (const progress of [0.02, 0.28, 0.53, 0.78]) {
+                  const target = section.offsetTop + distance * progress;
+                  window.scrollTo(0, target);
+                  window.dispatchEvent(new Event('scroll'));
+                  await wait();
+                  states.push({
+                    progress,
+                    target: Math.round(target),
+                    scrollY: Math.round(window.scrollY),
+                    sectionTop: Math.round(section.offsetTop),
+                    rectTop: Math.round(section.getBoundingClientRect().top),
+                    rotation: board.style.getPropertyValue('--clipboard-rotate').trim(),
+                    active: items.findIndex(item => item.classList.contains('is-active')),
+                    checked: items.filter(item => item.classList.contains('is-checked')).length
+                  });
+                }
+                window.scrollTo(0, section.offsetTop + distance * 0.78);
+                dispatchEvent(new Event('scroll'));
+              } else {
+                scrollTo(0, section.offsetTop - 18);
+              }
+              await wait();
+              return JSON.stringify({
+                missing: false,
+                itemCount: items.length,
+                states,
+                active: items.findIndex(item => item.classList.contains('is-active')),
+                checked: items.filter(item => item.classList.contains('is-checked')).length,
+                boardTransform: getComputedStyle(board).transform,
+                boardRect: (() => {
+                  const rect = board.getBoundingClientRect();
+                  return {left: Math.round(rect.left), right: Math.round(rect.right), top: Math.round(rect.top), bottom: Math.round(rect.bottom)};
+                })()
+              });
+            })()"""
+            clipboard_evaluation = call(
+                "Runtime.evaluate", expression=clipboard_expression, awaitPromise=True, returnByValue=True
+            )
+            clipboard_result = clipboard_evaluation.get("result", {})
+            if "value" not in clipboard_result:
+                raise RuntimeError(f"Clipboard evaluation failed: {json.dumps(clipboard_evaluation, ensure_ascii=False)}")
+            metrics["clipboardMotion"] = json.loads(clipboard_result["value"])
+            clipboard_shot = call("Page.captureScreenshot", format="png", captureBeyondViewport=False, fromSurface=True)
+            (OUTPUT_DIR / f"{OUTPUT_PREFIX}-{label}-clipboard.png").write_bytes(base64.b64decode(clipboard_shot["data"]))
             results[label] = {**metrics, "contentHeight": layout["height"]}
 
         if results["desktop"]["innerWidth"] != 1440 or results["mobile"]["innerWidth"] != 390:
@@ -191,6 +246,17 @@ def main():
             raise SystemExit("hero video autoplay did not start")
         if not all(results["mobile"]["interactions"].values()):
             raise SystemExit("interaction failure")
+        if any(r["clipboardMotion"].get("missing") or r["clipboardMotion"].get("itemCount") != 4 for r in results.values()):
+            raise SystemExit("clipboard structure failure")
+        desktop_states = results["desktop"]["clipboardMotion"]["states"]
+        if [state["active"] for state in desktop_states] != [0, 1, 2, 3]:
+            raise SystemExit(f"clipboard active-item progression failure: {json.dumps(desktop_states, ensure_ascii=False)}")
+        if [state["checked"] for state in desktop_states] != [1, 2, 3, 4]:
+            raise SystemExit(f"clipboard check progression failure: {json.dumps(desktop_states, ensure_ascii=False)}")
+        if len({state["rotation"] for state in desktop_states}) != 4:
+            raise SystemExit("clipboard rotation failure")
+        if results["mobile"]["clipboardMotion"]["active"] != -1 or results["mobile"]["clipboardMotion"]["checked"] != 4:
+            raise SystemExit("clipboard mobile fallback failure")
 
         call(
             "Emulation.setEmulatedMedia",
@@ -207,7 +273,16 @@ def main():
                   videos: [...document.querySelectorAll('[data-hero-video]')].map(v => ({
                     paused: v.paused,
                     display: getComputedStyle(v).display
-                  }))
+                  })),
+                  clipboard: (() => {
+                    const board = document.querySelector('[data-clipboard]');
+                    const items = [...document.querySelectorAll('[data-clipboard-item]')];
+                    return {
+                      transform: board ? getComputedStyle(board).transform : null,
+                      active: items.findIndex(item => item.classList.contains('is-active')),
+                      checked: items.filter(item => item.classList.contains('is-checked')).length
+                    };
+                  })()
                 })""",
                 returnByValue=True,
             )["result"]["value"]
@@ -215,6 +290,10 @@ def main():
         results["reducedMotion"] = reduced_motion
         if not reduced_motion["matches"] or any(v["display"] != "none" or not v["paused"] for v in reduced_motion["videos"]):
             raise SystemExit("reduced motion fallback failure")
+        if reduced_motion["clipboard"]["transform"] != "none" or reduced_motion["clipboard"]["active"] != -1 or reduced_motion["clipboard"]["checked"] != 4:
+            raise SystemExit("clipboard reduced motion fallback failure")
+        reduced_shot = call("Page.captureScreenshot", format="png", captureBeyondViewport=False, fromSurface=True)
+        (OUTPUT_DIR / f"{OUTPUT_PREFIX}-reduced-motion.png").write_bytes(base64.b64decode(reduced_shot["data"]))
         print(json.dumps(results, ensure_ascii=False, indent=2))
         ws.close()
     finally:
