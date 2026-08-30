@@ -88,7 +88,7 @@
   .hero-media{position:absolute;inset:0;z-index:-4;overflow:hidden;background:#063b4d;opacity:.25}
   .hero-media::after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(90deg,rgba(4,46,62,.72) 0%,rgba(4,46,62,.48) 48%,rgba(4,46,62,.68) 100%)}
   .hero-video{position:absolute;inset:-3%;width:106%;height:106%;object-fit:cover;pointer-events:none;filter:grayscale(1) saturate(.22) contrast(1.12);opacity:1}
-  .hero-video-trafostation{object-position:center}
+  .hero-video-pruefanlagen{object-position:center center}
   .hero-content{align-self:center;max-width:1120px;padding-bottom:40px}
   .kicker{color:#b9d9e2;margin-bottom:30px}
   .hero h1{font-size:clamp(4.2rem,6.6vw,8.6rem);line-height:.79;letter-spacing:-.07em;font-weight:520;white-space:nowrap}
@@ -216,7 +216,7 @@
   }
   @media(prefers-reduced-motion:reduce){
     *{scroll-behavior:auto!important;transition:none!important}
-    .hero-media{background:linear-gradient(rgba(4,46,62,.72),rgba(4,46,62,.72)),url('../assets/video/hero-jelden-trafostation.jpg') center/cover no-repeat}
+    .hero-media{background:linear-gradient(rgba(4,46,62,.74),rgba(4,46,62,.74)),url('../assets/video/hero-jelden-pruefanlagen.jpg?v=5') center/cover no-repeat}
     .hero-video{display:none!important;animation:none!important}
   }
 }
