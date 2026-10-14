@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><meta name="theme-color" content="#0a526b">
+<title>Prüfung anfragen | Jelden Sachverständigenbüro</title>
+<link rel="icon" href="../assets/favicon.ico?v=5"><link rel="stylesheet" href="styles.css?v=28"><link rel="stylesheet" href="legal.css?v=2"><link rel="stylesheet" href="kontakt.css?v=1"><script src="script.js?v=13" defer></script><script src="kontakt.js?v=2" defer></script>
+</head>
+<body class="legal-page funnel-page">
+<a class="skip-link" href="#main">Zum Inhalt springen</a>
+<header class="site-header"><a class="brand" href="index.html" aria-label="Jelden – Startseite"><img src="../assets/brand/logo-white-transparent.png?v=3" alt="Jelden Sachverständigenbüro" width="449" height="136"></a><a class="funnel-exit" href="index.html#kontakt">Zur Website</a></header>
+<main id="main" class="funnel-main">
+<div class="funnel-heading"><p class="section-code">JELDEN / ANFRAGE</p><h1>Zur passenden<br>Prüfung.</h1><p>Ein paar Angaben reichen für den ersten Kontakt. Technische Details lassen sich anschließend klären.</p></div>
+<div class="funnel-panel">
+<aside class="legal-review" aria-label="Vorschaustatus"><strong>Vorschau zur Durchsicht – kein Versand</strong><p>Sie können den Ablauf mit Beispieldaten ausprobieren. Der Versand an Tobias wird erst nach Einrichtung der Hosting-Anbindung aktiviert.</p></aside>
+<noscript><p>Für die schrittweise Anfrage bitte JavaScript aktivieren oder direkt an <a href="mailto:info@sv-jelden.de">info@sv-jelden.de</a> schreiben. Nennen Sie einfach die Anlage, Ihr Anliegen und den Ort.</p></noscript>
+<form id="anfrage" data-endpoint="" hidden>
+<p class="funnel-progress" id="progress" aria-live="polite">Schritt 1 von 3</p>
+<div class="progress-track" aria-hidden="true"><span id="progress-bar"></span></div>
+<section data-step="0" aria-labelledby="step-0-title">
+<h2 id="step-0-title" tabindex="-1">Um welche Anlage geht es?</h2><p class="step-note">Mehrere Antworten sind möglich. Keine Fachkenntnisse nötig.</p>
+<fieldset><legend class="sr-only">Anlagen auswählen</legend>
+<label class="choice"><input type="checkbox" name="anlage" value="Brandmelde- und Alarmierungsanlagen"><span>Brandmelde- und Alarmierungsanlagen</span></label>
+<label class="choice"><input type="checkbox" name="anlage" value="Sicherheitsstromversorgung"><span>Sicherheitsstromversorgung</span></label>
+<label class="choice"><input type="checkbox" name="anlage" value="Sicherheitsbeleuchtung"><span>Sicherheitsbeleuchtung</span></label>
+<label class="choice"><input type="checkbox" name="anlage" value="Elektrische Anlagen"><span>Elektrische Anlagen</span></label>
+<label class="choice"><input type="checkbox" name="anlage" value="Noch unklar" id="unsicher"><span>Ich bin unsicher</span></label>
+</fieldset>
+<button class="button funnel-primary" type="button" data-next>Weiter</button>
+</section>
+<section data-step="1" aria-labelledby="step-1-title" hidden>
+<h2 id="step-1-title" tabindex="-1">Was benötigen Sie?</h2><p class="step-note">Wählen Sie, was am ehesten passt.</p>
+<fieldset><legend class="sr-only">Anliegen auswählen</legend>
+<label class="choice"><input type="radio" name="anlass" value="Erstprüfung"><span>Erstprüfung</span></label>
+<label class="choice"><input type="radio" name="anlass" value="Wiederkehrende Prüfung"><span>Wiederkehrende Prüfung</span></label>
+<label class="choice"><input type="radio" name="anlass" value="VdS-Prüfung elektrischer Anlagen"><span>VdS-Prüfung elektrischer Anlagen</span></label>
+<label class="choice"><input type="radio" name="anlass" value="Begleitung während der Bauphase"><span>Begleitung während der Bauphase</span></label>
+<label class="choice"><input type="radio" name="anlass" value="Bitte gemeinsam klären"><span>Das möchte ich gemeinsam klären</span></label>
+</fieldset>
+<div class="funnel-actions"><button class="funnel-back" type="button" data-back>Zurück</button><button class="button funnel-primary" type="button" data-next>Weiter</button></div>
+</section>
+<section data-step="2" aria-labelledby="step-2-title" hidden>
+<h2 id="step-2-title" tabindex="-1">Wie darf ich mich zurückmelden?</h2><p class="step-note">Wählen Sie Ihren bevorzugten Rückmeldeweg. Nur die passende Kontaktangabe ist erforderlich.</p>
+<label class="field-label" for="ort">PLZ oder Ort <span>(Pflichtfeld)</span></label><input class="text-field" id="ort" name="ort" type="text" maxlength="100" autocomplete="off" placeholder="z. B. Düsseldorf" required>
+<label class="field-label" for="rueckweg">Gewünschte Rückmeldung</label><select class="text-field" id="rueckweg" name="rueckweg" required><option value="">Bitte auswählen</option><option value="email">Per E-Mail</option><option value="telefon">Telefonischer Rückruf</option></select>
+<div id="kontaktfeld" hidden><label class="field-label" for="rueckkontakt" id="kontakt-label">Kontaktangabe</label><input class="text-field" id="rueckkontakt" name="rueckkontakt" maxlength="254" disabled></div>
+<div hidden aria-hidden="true"><label for="website">Website</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
+<details class="optional-fields"><summary>Weitere Angaben ergänzen (freiwillig)</summary>
+<label class="field-label" for="name">Ihr Name</label><input class="text-field" id="name" name="name" autocomplete="name" maxlength="100">
+<label class="field-label" for="termin">Gewünschter Zeitraum</label><input class="text-field" id="termin" name="termin" placeholder="z. B. im November oder noch offen" maxlength="100">
+<label class="field-label" for="nachricht">Was ist noch wichtig?</label><textarea class="text-field" id="nachricht" name="nachricht" rows="3" maxlength="700" placeholder="Bitte nur die für Ihre Anfrage nötigen Angaben eintragen."></textarea>
+</details>
+<p class="privacy-note">Mit „Anfrage senden“ übermitteln Sie Ihre Angaben zur Bearbeitung an Tobias Jelden. Ihr gewünschter Rückmeldeweg wird in der Anfrage angegeben. <a href="datenschutz.html">Datenschutzhinweise</a></p>
+<div class="funnel-actions"><button class="funnel-back" type="button" data-back>Zurück</button><button class="button funnel-primary" type="submit">Anfrage prüfen</button></div>
+</section>
+<p id="form-error" class="form-error" role="alert"></p>
+</form>
+<section id="summary" hidden aria-labelledby="summary-title"><p class="section-code">IHRE ANFRAGE</p><h2 id="summary-title" tabindex="-1">Passt alles?</h2><p class="step-note">Die Anfrage wird an info@sv-jelden.de übermittelt. Tobias meldet sich auf dem von Ihnen gewählten Weg zurück.</p><dl id="summary-list"></dl><p id="preview-note" class="privacy-note" hidden>Vorschau: Der direkte Versand ist noch nicht angebunden. Es werden keine Angaben übertragen.</p><button id="send-button" type="button" class="button funnel-primary">Anfrage senden</button><p id="send-status" role="status" aria-live="polite"></p><button id="edit-button" type="button" class="funnel-back">Angaben bearbeiten</button></section>
+</div>
+<p class="funnel-direct">Lieber direkt schreiben? <a href="mailto:info@sv-jelden.de">info@sv-jelden.de</a></p>
+</main>
+<footer class="site-footer"><a class="footer-brand" href="index.html"><img src="../assets/brand/logo-teal-transparent.png" alt="Jelden Sachverständigenbüro" width="449" height="136"></a><address>Tobias Jelden · Brehmstraße 3 · 40239 Düsseldorf</address><div class="footer-links"><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a></div><p>© <span data-year>2026</span> Jelden Sachverständigenbüro.</p></footer>
+</body></html>
