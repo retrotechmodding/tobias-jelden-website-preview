@@ -177,6 +177,13 @@ document.querySelectorAll('dialog').forEach((dialog) => {
   });
 });
 
+// Preserve old privacy deep links after moving to a separate page.
+const openPrivacyFromHash = () => {
+  if (location.hash === '#datenschutz') location.replace('datenschutz.html');
+};
+window.addEventListener('hashchange', openPrivacyFromHash);
+openPrivacyFromHash();
+
 document.querySelectorAll('[data-year]').forEach((node) => {
   node.textContent = new Date().getFullYear();
 });
